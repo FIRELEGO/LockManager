@@ -37,6 +37,7 @@ public class DBConnectionManager {
 	private PreparedStatement psAddLock;
 	private PreparedStatement psSetLockUse;
 	private PreparedStatement psPurgeOldLocks;
+	private PreparedStatement psGetAssignedLocker;
 
 	private DBConnectionManager() throws ClassNotFoundException, SQLException {
 		// Set up database connection
@@ -101,6 +102,7 @@ public class DBConnectionManager {
 			psAddLock = conn.prepareStatement("INSERT INTO suncoast.lock (Serial, Combo, Barcode, YearAdded, YearLastUsed, TotalUses) VALUES (?, ?, ?, ?, 3000, 0);");
 			psSetLockUse = conn.prepareStatement("UPDATE suncoast.lock SET YearLastUsed=?, TotalUses=? WHERE Serial=?;");
 			psPurgeOldLocks = conn.prepareStatement("DELETE FROM suncoast.lock WHERE YearAdded<?;");
+			psGetAssignedLocker = conn.prepareStatement("SELECT * FROM suncoast.lockerassignment WHERE Serial=?;");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -154,6 +156,23 @@ public class DBConnectionManager {
 			e.printStackTrace();
 		}
 
+		return ret;
+	}
+	
+	public String getAssignedLocker(int serial) {
+		String ret = "";
+		
+		try {
+			psGetAssignedLocker.setInt(1, serial);
+
+			ResultSet rs = psGetAssignedLocker.executeQuery();
+			boolean hasResult = rs.isBeforeFirst();
+			rs.next();
+			ret = !hasResult ? "-" : rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return ret;
 	}
 

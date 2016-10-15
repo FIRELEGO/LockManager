@@ -24,10 +24,10 @@ import javafx.scene.control.ButtonType;
 public class Main {
 	// DEBUG remove from final
 	public static boolean noDB = false;
-	public static boolean homeDB = false;
+	public static boolean homeDB = true;
 
 	private static DBConnectionManager db;
-	public static final String VERSION = "0.2.0";
+	public static final String VERSION = "0.3.0";
 
 	public static void main(String[] args) {
 		if(!noDB) {
@@ -45,6 +45,9 @@ public class Main {
 		switch(key) {
 			case "Home":
 				SetUp.setScene(new HomeGUI());
+				break;
+			case "LookUp":
+				SetUp.setScene(new LookUpGUI());
 				break;
 			case "AddLock":
 				SetUp.setScene(new AddLockGUI());
@@ -103,6 +106,10 @@ public class Main {
 	
 	public static void assignLocker(int serial, String lockerNum, int curYear, int curUses) {
 		db.assignLocker(serial, lockerNum, curYear, curUses);
+	}
+
+	public static String getAssignedLocker(int serial) {
+		return db.getAssignedLocker(serial);
 	}
 
 	public static String getCurYear() {

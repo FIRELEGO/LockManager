@@ -11,7 +11,6 @@ import javafx.scene.layout.GridPane;
 public class AddLockGUI extends GUI {
 	private Label lblSerial = new Label("Serial: ");
 	private TextField txtSerial = new TextField("");
-	private Button btnLookUp = new MyButton("Look Up");
 	private Label lblCombo = new Label("Combo(xx-xx-xx): ");
 	private TextField txtCombo = new TextField("");
 	private Label lblBarcode = new Label("Barcode: ");
