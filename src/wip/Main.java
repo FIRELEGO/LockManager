@@ -27,7 +27,7 @@ public class Main {
 	public static boolean homeDB = true;
 
 	private static DBConnectionManager db;
-	public static final String VERSION = "0.3.0";
+	public static final String VERSION = "0.4.0";
 
 	public static void main(String[] args) {
 		if(!noDB) {
