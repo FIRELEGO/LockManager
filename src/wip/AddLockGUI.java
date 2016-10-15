@@ -16,8 +16,8 @@ public class AddLockGUI extends GUI {
 	private TextField txtCombo = new TextField("");
 	private Label lblBarcode = new Label("Barcode: ");
 	private TextField txtBarcode = new TextField("");
-	private Label lblDateAdded = new Label("Date Added: ");
-	private Label lblDateAddedT = new Label("-");
+	private Label lblYearAdded = new Label("Year Added: ");
+	private Label lblYearAddedT = new Label("-");
 
 	private Button btnCheckForExisting = new MyButton("Check for Existing");
 	private Button btnAdd = new MyButton("Add");
@@ -38,8 +38,8 @@ public class AddLockGUI extends GUI {
 		gpMain.add(lblBarcode, 0, 3);
 		gpMain.add(txtBarcode, 1, 3);
 		txtBarcode.setDisable(true);
-		gpMain.add(lblDateAdded, 0, 4);
-		gpMain.add(lblDateAddedT, 1, 4);
+		gpMain.add(lblYearAdded, 0, 4);
+		gpMain.add(lblYearAddedT, 1, 4);
 
 		gpButtons.add(btnAdd, 0, 0);
 		gpButtons.add(btnClear, 1, 0);
@@ -67,19 +67,21 @@ public class AddLockGUI extends GUI {
 			int serial = Integer.parseInt(txtSerial.getText());
 			String combo = txtCombo.getText();
 			int barcode = Integer.parseInt(txtBarcode.getText());
-			String dateAdded = lblDateAddedT.getText();
+			int yearAdded = Integer.parseInt(lblYearAddedT.getText());
 
 
 			// Checks that numbers in xx-xx-xx combo are ints.
 			if(combo.length() != 8) {
 				lblError.setText("Make sure combo is in xx-xx-xx form.");
+			} else if (Main.searchBarcode(barcode) != null) {
+				lblError.setText("Barcode already in use.");
 			} else {
 				String[] comboNums = combo.split("-");
 				for(String temp : comboNums) {
 					Integer.parseInt(temp);
 				}
 
-				Main.addLock(serial, combo, barcode, dateAdded);
+				Main.addLock(serial, combo, barcode, yearAdded);
 
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Add Lock Success");
@@ -93,17 +95,6 @@ public class AddLockGUI extends GUI {
 		} catch (NumberFormatException e) {
 			lblError.setText("Check that the serial and barcode are integers.");
 		}
-	}
-
-	private void newSerial() {
-		txtSerial.setText("");
-		txtSerial.setDisable(false);
-		txtCombo.setText("");
-		txtCombo.setDisable(true);
-		txtBarcode.setText("");
-		txtBarcode.setDisable(true);
-		lblDateAddedT.setText("-");
-		btnCheckForExisting.setText("Check for Existing");
 	}
 
 	private void lookUp() {
@@ -120,19 +111,19 @@ public class AddLockGUI extends GUI {
 
 				if(lock.getBarcode() == -1) {
 					txtBarcode.setDisable(false);
-					lock.setDateAdded(Main.getCurDate());
-					lblDateAddedT.setText(lock.getDateAdded());
+					lock.setYearAdded(Main.getCurYear());
+					lblYearAddedT.setText(lock.getYearAdded());
 					btnAdd.setDisable(false);
 					lblError.setText("Lock found in old DB. Enter remaining info.");
 				} else {
 					txtBarcode.setText("" + lock.getBarcode());
-					lblDateAddedT.setText(lock.getDateAdded());
+					lblYearAddedT.setText(lock.getYearAdded());
 					lblError.setText("Lock already in DB.");
 				}
 			} else {
 				txtBarcode.setDisable(false);
 				txtCombo.setDisable(false);
-				lblDateAddedT.setText(Main.getCurDate());
+				lblYearAddedT.setText(Main.getCurYear());
 				btnAdd.setDisable(false);
 				lblError.setText("Lock not found. Enter info.");
 			}
@@ -146,11 +137,24 @@ public class AddLockGUI extends GUI {
 
 	private void clear() {
 		txtSerial.setText("");
+		txtSerial.setDisable(false);
 		txtCombo.setText("");
 		txtCombo.setDisable(true);
 		txtBarcode.setText("");
 		txtBarcode.setDisable(true);
-		lblDateAddedT.setText("-");
+		lblYearAddedT.setText("-");
 		btnAdd.setDisable(true);
+		btnCheckForExisting.setText("Check for Existing");
+	}
+
+	private void newSerial() {
+		txtSerial.setText("");
+		txtSerial.setDisable(false);
+		txtCombo.setText("");
+		txtCombo.setDisable(true);
+		txtBarcode.setText("");
+		txtBarcode.setDisable(true);
+		lblYearAddedT.setText("-");
+		btnCheckForExisting.setText("Check for Existing");
 	}
 }

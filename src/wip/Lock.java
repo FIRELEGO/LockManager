@@ -8,16 +8,18 @@ public class Lock {
 	private int serial = -1;
 	private String combo = "null";
 	private int barcode = -1;
-	private String dateAdded = "null";
+	private String yearAdded = "null";
 	private int yearLastUsed = -1;
-	
-	public Lock(int serial, String combo, int barcode, String dateAdded, int yearLastUsed) {
+	private int totalUses = -1;
+
+	public Lock(int serial, String combo, int barcode, String yearAdded, int yearLastUsed, int totalUses) {
 		super();
 		this.serial = serial;
 		this.combo = combo;
 		this.barcode = barcode;
-		this.dateAdded = dateAdded;
+		this.yearAdded = yearAdded;
 		this.yearLastUsed = yearLastUsed;
+		this.totalUses = totalUses;
 	}
 	
 	public Lock(int serial, String combo) {
@@ -26,8 +28,8 @@ public class Lock {
 		this.combo = combo;
 	}
 	
-	public void setDateAdded(String date) {
-		dateAdded = date;
+	public void setYearAdded(String yearAdded) {
+		this.yearAdded = yearAdded;
 	}
 	
 	public int getSerial() {
@@ -42,15 +44,19 @@ public class Lock {
 		return barcode;
 	}
 
-	public String getDateAdded() {
-		return dateAdded;
+	public String getYearAdded() {
+		return yearAdded;
 	}
 
 	public int getYearLastUsed() {
 		return yearLastUsed;
 	}
+	
+	public int getTotalUses() {
+		return totalUses;
+	}
 
 	public String toString() {
-		return serial + ", " + combo + ", " + barcode + ", " + dateAdded + ", " + yearLastUsed;
+		return serial + ", " + combo + ", " + barcode + ", " + yearAdded + ", " + yearLastUsed;
 	}
 }

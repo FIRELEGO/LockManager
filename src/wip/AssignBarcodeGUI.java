@@ -16,10 +16,12 @@ public class AssignBarcodeGUI extends GUI {
 	private TextField txtBarcode = new TextField("");
 	private Label lblCombo = new Label("Combo: ");
 	private Label lblComboT = new Label("-");
-	private Label lblDateAdded = new Label("Date Added: ");
-	private Label lblDateAddedT = new Label("-");
-	private Label lblYear = new Label("Year Last Used: ");
-	private Label lblYearT = new Label("-");
+	private Label lblYearAdded = new Label("Year Added: ");
+	private Label lblYearAddedT = new Label("-");
+	private Label lblYearLastUsed = new Label("Year Last Used: ");
+	private Label lblYearLastUsedT = new Label("-");
+	private Label lblTotalUses = new Label("Total Uses: ");
+	private Label lblTotalUsesT = new Label("-");
 
 	private Button btnCheckForExisting = new MyButton("Check for Lock");
 	private Button btnAssign = new MyButton("Assign");
@@ -39,10 +41,12 @@ public class AssignBarcodeGUI extends GUI {
 		txtBarcode.setDisable(true);
 		gpMain.add(lblCombo, 0, 3);
 		gpMain.add(lblComboT, 1, 3);
-		gpMain.add(lblDateAdded, 0, 4);
-		gpMain.add(lblDateAddedT, 1, 4);
-		gpMain.add(lblYear, 0, 5);
-		gpMain.add(lblYearT, 1, 5);
+		gpMain.add(lblYearAdded, 0, 4);
+		gpMain.add(lblYearAddedT, 1, 4);
+		gpMain.add(lblYearLastUsed, 0, 5);
+		gpMain.add(lblYearLastUsedT, 1, 5);
+		gpMain.add(lblTotalUses, 0, 6);
+		gpMain.add(lblTotalUsesT, 1, 6);
 
 		gpButtons.add(btnAssign, 0, 0);
 		gpButtons.add(btnClear, 1, 0);
@@ -57,21 +61,25 @@ public class AssignBarcodeGUI extends GUI {
 
 	private void assign() {
 		lblError.setText("");
-		
+
 		try {
 			int serial = Integer.parseInt(txtSerial.getText());
 			int barcode = Integer.parseInt(txtBarcode.getText());
 
-			Main.editBarcode(serial, barcode);
+			if (Main.searchBarcode(barcode) == null) {
+				Main.editBarcode(serial, barcode);
 
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Barcode Change Success");
-			alert.setHeaderText("Success!");
-			alert.setContentText("Barcode was succesfully changed.\nSerial: " + serial + "\tBarcode: " + barcode);
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Barcode Change Success");
+				alert.setHeaderText("Success!");
+				alert.setContentText("Barcode was succesfully changed.\nSerial: " + serial + "\tBarcode: " + barcode);
 
-			alert.showAndWait();
-			
-			Main.setStage("Home");
+				alert.showAndWait();
+
+				Main.setStage("Home");
+			} else {
+				lblError.setText("Barcode already in use.");
+			}
 		} catch (NumberFormatException e) {
 			lblError.setText("Check that the serial and barcode are integers.");
 		}
@@ -86,8 +94,9 @@ public class AssignBarcodeGUI extends GUI {
 				txtBarcode.setText("" + lock.getBarcode());
 				txtBarcode.setDisable(false);
 				lblComboT.setText(lock.getCombo());
-				lblDateAddedT.setText(lock.getDateAdded());
-				lblYearT.setText("" + lock.getYearLastUsed());
+				lblYearAddedT.setText(lock.getYearAdded());
+				lblYearLastUsedT.setText("" + (lock.getYearLastUsed() == 3000 ? "-" : lock.getYearLastUsed()));
+				lblTotalUsesT.setText("" + lock.getTotalUses());
 				btnAssign.setDisable(false);
 			} else {
 				lblError.setText("Lock not found. Check serial and try again.");
@@ -101,8 +110,9 @@ public class AssignBarcodeGUI extends GUI {
 		txtSerial.setText("");
 		txtBarcode.setText("");
 		lblComboT.setText("-");
-		lblDateAddedT.setText("-");
-		lblYearT.setText("-");
+		lblYearAddedT.setText("-");
+		lblYearLastUsedT.setText("-");
+		lblTotalUsesT.setText("-");
 		btnAssign.setDisable(true);
 	}
 }

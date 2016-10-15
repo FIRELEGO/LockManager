@@ -12,10 +12,19 @@ public class HomeGUI extends GUI {
 	private Button btnAssignLocker = new MyButton("Assign Locker");
 	private Button btnAssignBarcode = new MyButton("Assign Barcode");
 	private Button btnReportLock = new MyButton("Report Lock");
+	private Button btnDeleteLock = new MyButton("Delete Lock");
+	private Button btnPurgeLocks = new MyButton("Purge Old Locks");
 	private Button btnExit = new MyButton("Exit Program");
 
 	public HomeGUI() {
 		super(500, 400, "Home");
+		
+		// TODO not done functions
+		btnLookUp.setDisable(true);
+		btnEditLock.setDisable(true);
+		btnUnlockLock.setDisable(true);
+		btnReportLock.setDisable(true);
+		btnDeleteLock.setDisable(true);
 		
 		gpButtons.add(btnLookUp, 0, 0);
 		gpButtons.add(btnAddLock, 1, 0);
@@ -24,7 +33,9 @@ public class HomeGUI extends GUI {
 		gpButtons.add(btnAssignLocker, 1, 1);
 		gpButtons.add(btnAssignBarcode, 2, 1);
 		gpButtons.add(btnReportLock, 0, 2);
-		gpButtons.add(btnExit, 2, 2);
+		gpButtons.add(btnDeleteLock, 1, 2);
+		gpButtons.add(btnPurgeLocks, 2, 2);
+		gpButtons.add(btnExit, 1, 3);
 
 		btnLookUp.setOnAction(e -> Main.setStage("LookUp"));
 		btnAddLock.setOnAction(e -> Main.setStage("AddLock"));
@@ -33,6 +44,8 @@ public class HomeGUI extends GUI {
 		btnAssignLocker.setOnAction(e -> Main.setStage("AssignLocker"));
 		btnAssignBarcode.setOnAction(e -> Main.setStage("AssignBarcode"));
 		btnReportLock.setOnAction(e -> Main.setStage("ReportLock"));
+		btnDeleteLock.setOnAction(e -> Main.setStage("DeleteLock"));
+		btnPurgeLocks.setOnAction(e -> Main.purgeLocks());
 		btnExit.setOnAction(e -> Main.exit());
 	}
 }

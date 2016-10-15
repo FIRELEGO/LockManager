@@ -3,11 +3,17 @@
  */
 package wip;
 
+import java.util.List;
+
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -58,6 +64,8 @@ public abstract class GUI {
 		gpRoot.add(new Label("\n"), 0, 2);
 		gpRoot.add(gpButtons, 0, 3);
 		gpRoot.add(lblError, 0, 4);
+		
+		gpRoot.setBackground(new Background(new BackgroundFill(new Color(1, 0, 0, 1), new CornerRadii(0), new Insets(0))));
 	}
 	
 	public Scene getScene() {
