@@ -10,3 +10,4 @@ public class MyButton extends Button {
 		setPrefWidth(150);
 	}
 }
+ 

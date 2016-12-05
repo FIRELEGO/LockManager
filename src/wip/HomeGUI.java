@@ -1,8 +1,6 @@
 package wip;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 
 public class HomeGUI extends GUI {
 	private Button btnLookUp = new MyButton("Look Up");
@@ -14,6 +12,10 @@ public class HomeGUI extends GUI {
 	private Button btnReportLock = new MyButton("Report Lock");
 	private Button btnDeleteLock = new MyButton("Delete Lock");
 	private Button btnPurgeLocks = new MyButton("Purge Old Locks");
+	private Button btnViewReports = new MyButton("View Reports");
+	private Button btnGenerate = new MyButton("Generate Data Sheet");
+	private Button btnList = new MyButton("List");
+	private Button btnCheckLocker = new MyButton("Check Locker Assignment");
 	private Button btnExit = new MyButton("Exit Program");
 
 	public HomeGUI() {
@@ -22,8 +24,8 @@ public class HomeGUI extends GUI {
 		// TODO not done functions
 		btnEditLock.setDisable(true);
 		btnUnlockLock.setDisable(true);
-		btnReportLock.setDisable(true);
 		btnDeleteLock.setDisable(true);
+		btnCheckLocker.setDisable(true);
 		
 		gpButtons.add(btnLookUp, 0, 0);
 		gpButtons.add(btnAddLock, 1, 0);
@@ -34,7 +36,11 @@ public class HomeGUI extends GUI {
 		gpButtons.add(btnReportLock, 0, 2);
 		gpButtons.add(btnDeleteLock, 1, 2);
 		gpButtons.add(btnPurgeLocks, 2, 2);
-		gpButtons.add(btnExit, 1, 3);
+		gpButtons.add(btnViewReports, 0, 3);
+		gpButtons.add(btnGenerate, 1, 3);
+		gpButtons.add(btnList, 2, 3);
+		gpButtons.add(btnCheckLocker, 1, 4);
+		gpButtons.add(btnExit, 1, 4);
 
 		btnLookUp.setOnAction(e -> Main.setStage("LookUp"));
 		btnAddLock.setOnAction(e -> Main.setStage("AddLock"));
@@ -45,6 +51,10 @@ public class HomeGUI extends GUI {
 		btnReportLock.setOnAction(e -> Main.setStage("ReportLock"));
 		btnDeleteLock.setOnAction(e -> Main.setStage("DeleteLock"));
 		btnPurgeLocks.setOnAction(e -> Main.purgeLocks());
+		btnViewReports.setOnAction(e -> Main.setStage("ViewReports"));
+		btnGenerate.setOnAction(e -> Main.setStage("Generate"));
+		btnList.setOnAction(e -> Main.setStage("List"));
+		btnCheckLocker.setOnAction(e -> Main.setStage("CheckLocker"));
 		btnExit.setOnAction(e -> Main.exit());
 	}
 }

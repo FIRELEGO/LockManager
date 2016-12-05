@@ -1,18 +1,14 @@
 package wip;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Lock {
 	private int serial = -1;
 	private String combo = "null";
 	private int barcode = -1;
-	private String yearAdded = "null";
+	private int yearAdded = -1;
 	private int yearLastUsed = -1;
 	private int totalUses = -1;
 
-	public Lock(int serial, String combo, int barcode, String yearAdded, int yearLastUsed, int totalUses) {
+	public Lock(int serial, String combo, int barcode, int yearAdded, int yearLastUsed, int totalUses) {
 		super();
 		this.serial = serial;
 		this.combo = combo;
@@ -28,7 +24,7 @@ public class Lock {
 		this.combo = combo;
 	}
 	
-	public void setYearAdded(String yearAdded) {
+	public void setYearAdded(int yearAdded) {
 		this.yearAdded = yearAdded;
 	}
 	
@@ -44,7 +40,7 @@ public class Lock {
 		return barcode;
 	}
 
-	public String getYearAdded() {
+	public int getYearAdded() {
 		return yearAdded;
 	}
 

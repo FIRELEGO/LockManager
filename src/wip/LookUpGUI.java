@@ -1,8 +1,6 @@
 package wip;
 
 import javafx.geometry.HPos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -11,13 +9,17 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 
 public class LookUpGUI extends GUI {
+	private Button btnLookUpCombo = new MyButton("Look Up by Combo");
+	
 	private ToggleGroup tgSelector = new ToggleGroup();
 	private RadioButton rbSerial = new RadioButton("Serial");
 	private RadioButton rbBarcode = new RadioButton("Barcode");
 	private Label lblSerial = new Label("Serial: ");
 	private TextField txtSerial = new TextField("");
+	private Label lblSerialT = new Label("-");
 	private Label lblBarcode = new Label("Barcode: ");
 	private TextField txtBarcode = new TextField("");
+	private Label lblBarcodeT = new Label("-");
 	private Label lblCombo = new Label("Combo: ");
 	private Label lblComboT = new Label("-");
 	private Label lblYearAdded = new Label("Year Added: ");
@@ -41,29 +43,37 @@ public class LookUpGUI extends GUI {
 		rbSerial.setOnAction(e -> setSerialMode());
 		rbBarcode.setOnAction(e -> setBarcodeMode());
 
-		gpMain.add(rbSerial, 0, 0);
+		gpMain.add(btnLookUpCombo, 0, 0, 2, 1);
+		GridPane.setHalignment(btnLookUpCombo, HPos.CENTER);
+		
+		gpMain.add(rbSerial, 0, 1);
 		rbSerial.setSelected(true);
-		gpMain.add(rbBarcode, 1, 0);
-		gpMain.add(lblSerial, 0, 1);
-		gpMain.add(txtSerial, 1, 1);
-		gpMain.add(lblBarcode, 0, 2);
-		gpMain.add(txtBarcode, 1, 2);
-		txtBarcode.setDisable(true);
-		gpMain.add(lblCombo, 0, 3);
-		gpMain.add(lblComboT, 1, 3);
-		gpMain.add(lblYearAdded, 0, 4);
-		gpMain.add(lblYearAddedT, 1, 4);
-		gpMain.add(lblYearUsed, 0, 5);
-		gpMain.add(lblYearUsedT, 1, 5);
-		gpMain.add(lblTotalUses, 0, 6);
-		gpMain.add(lblTotalUsesT, 1, 6);
-		gpMain.add(lblAssignedLocker, 0, 7);
-		gpMain.add(lblAssignedLockerT, 1, 7);
+		gpMain.add(rbBarcode, 1, 1);
+		gpMain.add(lblSerial, 0, 2);
+		gpMain.add(txtSerial, 1, 2);
+		gpMain.add(lblSerialT, 1, 2);
+		lblSerialT.setVisible(false);
+		gpMain.add(lblBarcode, 0, 3);
+		gpMain.add(txtBarcode, 1, 3);
+		txtBarcode.setVisible(false);
+		gpMain.add(lblBarcodeT, 1, 3);
+		gpMain.add(lblCombo, 0, 4);
+		gpMain.add(lblComboT, 1, 4);
+		gpMain.add(lblYearAdded, 0, 5);
+		gpMain.add(lblYearAddedT, 1, 5);
+		gpMain.add(lblYearUsed, 0, 6);
+		gpMain.add(lblYearUsedT, 1, 6);
+		gpMain.add(lblTotalUses, 0, 7);
+		gpMain.add(lblTotalUsesT, 1, 7);
+		gpMain.add(lblAssignedLocker, 0, 8);
+		gpMain.add(lblAssignedLockerT, 1, 8);
 
 		gpButtons.add(btnCheckInfo, 0, 0);
 		gpButtons.add(btnClear, 1, 0);
 		gpButtons.add(btnBack, 2, 0);
 
+		btnLookUpCombo.setOnAction(e -> Main.setStage("LookUpCombo"));
+		
 		btnCheckInfo.setOnAction(e -> lookUp());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
@@ -91,8 +101,10 @@ public class LookUpGUI extends GUI {
 		if (lock == null) {
 			lblError.setText("Lock not found in database.");
 		} else {
+			lblSerialT.setText("" + lock.getSerial());
+			lblBarcodeT.setText("" + lock.getBarcode());
 			lblComboT.setText(lock.getCombo());
-			lblYearAddedT.setText(lock.getYearAdded());
+			lblYearAddedT.setText("" + lock.getYearAdded());
 			lblYearUsedT.setText("" + (lock.getYearLastUsed() == 3000 ? "-" : lock.getYearLastUsed()));
 			lblTotalUsesT.setText("" + lock.getTotalUses());
 			lblAssignedLockerT.setText(Main.getAssignedLocker(lock.getSerial()));
@@ -100,11 +112,10 @@ public class LookUpGUI extends GUI {
 	}
 
 	private void clear() {
-		rbSerial.setSelected(true);
 		txtSerial.setText("");
-		txtSerial.setDisable(false);
+		lblSerialT.setText("-");
 		txtBarcode.setText("");
-		txtBarcode.setDisable(true);
+		lblBarcodeT.setText("-");
 		lblComboT.setText("-");
 		lblYearAddedT.setText("-");
 		lblYearUsedT.setText("-");
@@ -113,14 +124,20 @@ public class LookUpGUI extends GUI {
 	}
 
 	private void setSerialMode() {
-		txtBarcode.setDisable(true);
+		clear();
+		txtBarcode.setVisible(false);
 		txtBarcode.setText("");
-		txtSerial.setDisable(false);
+		lblBarcodeT.setVisible(true);
+		txtSerial.setVisible(true);
+		lblSerialT.setVisible(false);
 	}
 
 	private void setBarcodeMode() {
-		txtSerial.setDisable(true);
+		clear();
+		txtSerial.setVisible(false);
 		txtSerial.setText("");
-		txtBarcode.setDisable(false);
+		lblSerialT.setVisible(true);
+		txtBarcode.setVisible(true);
+		lblBarcodeT.setVisible(false);
 	}
 }

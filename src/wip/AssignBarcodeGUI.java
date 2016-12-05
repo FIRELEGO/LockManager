@@ -2,14 +2,13 @@ package wip;
 
 import javafx.geometry.HPos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 
 public class AssignBarcodeGUI extends GUI {
-	private int serial = -1;
 	private Label lblSerial = new Label("Serial: ");
 	private TextField txtSerial = new TextField("");
 	private Label lblBarcode = new Label("Barcode: ");
@@ -94,7 +93,7 @@ public class AssignBarcodeGUI extends GUI {
 				txtBarcode.setText("" + lock.getBarcode());
 				txtBarcode.setDisable(false);
 				lblComboT.setText(lock.getCombo());
-				lblYearAddedT.setText(lock.getYearAdded());
+				lblYearAddedT.setText("" + lock.getYearAdded());
 				lblYearLastUsedT.setText("" + (lock.getYearLastUsed() == 3000 ? "-" : lock.getYearLastUsed()));
 				lblTotalUsesT.setText("" + lock.getTotalUses());
 				btnAssign.setDisable(false);

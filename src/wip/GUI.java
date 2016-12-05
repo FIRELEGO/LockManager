@@ -16,6 +16,7 @@ public abstract class GUI {
 	protected GridPane gpMain;
 	protected GridPane gpButtons;
 	private Label lblHeader = new Label("\nLock Manager\t\tV" + Main.VERSION);
+	protected Label lblSuccess = new Label("");
 	protected Label lblError = new Label("");
 	private int height;
 	private int width;
@@ -40,7 +41,6 @@ public abstract class GUI {
 		gpInfo.setVgap(8);
 		gpInfo.add(lblHeader, 0, 0);
 		GridPane.setHalignment(lblHeader, HPos.CENTER);
-		gpInfo.add(new Label("\n"), 0, 1);
 
 		gpMain.setAlignment(Pos.TOP_CENTER);
 		gpMain.setHgap(8);
@@ -50,12 +50,14 @@ public abstract class GUI {
 		gpButtons.setHgap(8);
 		gpButtons.setVgap(8);
 
+		lblSuccess.setTextFill(Color.GREEN);
 		lblError.setTextFill(Color.RED);
 
 		gpRoot.add(gpInfo, 0, 0);
-		gpRoot.add(gpMain, 0, 1);
-		gpRoot.add(gpButtons, 0, 2);
-		gpRoot.add(lblError, 0, 3);
+		gpRoot.add(lblSuccess, 0, 1);
+		gpRoot.add(gpMain, 0, 2);
+		gpRoot.add(gpButtons, 0, 3);
+		gpRoot.add(lblError, 0, 4);
 	}
 
 	public Scene getScene() {

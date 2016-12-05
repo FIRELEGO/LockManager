@@ -1,12 +1,8 @@
 package wip;
 
-import javafx.geometry.HPos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.GridPane;
 
 public class AssignLockerGUI extends GUI {
 	private Label lblBarcode = new Label("Barcode: ");
@@ -70,9 +66,9 @@ public class AssignLockerGUI extends GUI {
 			Lock lock = Main.searchBarcode(barcode);
 			
 			if (lock != null) {
-				Main.assignLocker(lock.getSerial(), "" + lockerNum, Integer.parseInt(Main.getCurYear()), lock.getTotalUses());
+				Main.assignLocker(lock.getSerial(), "" + lockerNum, Main.getCurYear(), lock.getTotalUses());
 				
-				lblError.setText("Success! Barcode: " + lock.getBarcode() + " Locker: " + lockerNum);
+				lblSuccess.setText("Success! Barcode: " + lock.getBarcode() + " Locker: " + lockerNum);
 				
 				Lock newLock = Main.searchSerial(lock.getSerial(), false);
 				lblTotalUsesT.setText("" + newLock.getTotalUses());

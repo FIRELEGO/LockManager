@@ -1,4 +1,4 @@
-USE [Suncoast]
+USE [suncoast]
 GO
 
 /****** Object:  Table [dbo].[Lock]    Script Date: 9/17/2016 11:16:19 AM ******/

@@ -100,6 +100,7 @@ public class AddLockGUI extends GUI {
 		String sSerial = txtSerial.getText();
 		clear();
 		txtSerial.setText(sSerial);
+		lblSuccess.setText("");
 		lblError.setText("");
 
 		try {
@@ -111,20 +112,20 @@ public class AddLockGUI extends GUI {
 				if(lock.getBarcode() == -1) {
 					txtBarcode.setDisable(false);
 					lock.setYearAdded(Main.getCurYear());
-					lblYearAddedT.setText(lock.getYearAdded());
+					lblYearAddedT.setText("" + lock.getYearAdded());
 					btnAdd.setDisable(false);
-					lblError.setText("Lock found in old DB. Enter remaining info.");
+					lblSuccess.setText("Lock found in old DB. Enter remaining info.");
 				} else {
 					txtBarcode.setText("" + lock.getBarcode());
-					lblYearAddedT.setText(lock.getYearAdded());
+					lblYearAddedT.setText("" + lock.getYearAdded());
 					lblError.setText("Lock already in DB.");
 				}
 			} else {
 				txtBarcode.setDisable(false);
 				txtCombo.setDisable(false);
-				lblYearAddedT.setText(Main.getCurYear());
+				lblYearAddedT.setText("" + Main.getCurYear());
 				btnAdd.setDisable(false);
-				lblError.setText("Lock not found. Enter info.");
+				lblSuccess.setText("Lock not found. Enter info.");
 			}
 
 			txtSerial.setDisable(true);
