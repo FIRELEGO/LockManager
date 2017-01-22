@@ -69,6 +69,6 @@ public abstract class GUI {
 	}
 
 	public int[] getDim() {
-		return new int[] {width, height};
+		return new int[] { width, height };
 	}
 }

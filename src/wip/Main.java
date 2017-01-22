@@ -23,11 +23,12 @@ import javafx.scene.control.ButtonType;
 
 public class Main {
 	// DEBUG remove from final
-	public static boolean homeDB = false;
+	public static boolean homeDB = true;
+	
+	public static final String VERSION = "0.6.0";
 
 	private static DBConnectionManager db;
 	private static HashMap<String, String> hmSettings = new HashMap<String, String>();
-	public static final String VERSION = "0.4.0";
 
 	public static void main(String[] args) {
 		db = DBConnectionManager.getInstance();
@@ -67,6 +68,9 @@ public class Main {
 				break;
 			case "ReportLock":
 				SetUp.setScene(new ReportGUI());
+				break;
+			case "EditLock":
+				SetUp.setScene(new EditGUI());
 				break;
 			default:
 				System.out.println("setStage() no case: " + key);
@@ -219,14 +223,7 @@ public class Main {
 		return reports;
 	}
 
-	//	public static void load() {
-	//		users = db.getUsers();
-	//		accts = db.getAccts();
-	//	}
-
-	//	public static void save() {
-	//				db.saveUsers(users);
-	//				db.saveAccts(accts);
-	//
-	//	}
+	public static void changeLock(Lock oldLock, Lock newLock) {
+		db.changeLock(oldLock, newLock);
+	}
 }

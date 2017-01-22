@@ -22,7 +22,6 @@ public class HomeGUI extends GUI {
 		super(500, 400, "Home");
 		
 		// TODO not done functions
-		btnEditLock.setDisable(true);
 		btnUnlockLock.setDisable(true);
 		btnDeleteLock.setDisable(true);
 		btnCheckLocker.setDisable(true);
