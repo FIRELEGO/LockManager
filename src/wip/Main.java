@@ -6,6 +6,8 @@ package wip;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,16 +23,43 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
+/* TODO features
+ * make log
+ * remove all locker assignments
+ * add keybinding and textbox focusing
+ * locker assignment protection (rn a locker can be assigned to a locker with a lock already on it without warning of the old lock being bumped off.)
+ * allow to delete lock with reports (rn delete will fail because report has foreign key on lock)
+ */
+
 public class Main {
-	// DEBUG remove from final
+	// TODO remove from final
 	public static boolean homeDB = true;
-	
-	public static final String VERSION = "0.6.0";
+
+	public static final String VERSION = "0.7.0";
 
 	private static DBConnectionManager db;
 	private static HashMap<String, String> hmSettings = new HashMap<String, String>();
 
 	public static void main(String[] args) {
+
+
+
+		// TODO remove from final
+		String hostname = "Unknown";
+
+		try
+		{
+			InetAddress addr;
+			addr = InetAddress.getLocalHost();
+			hostname = addr.getHostName();
+			homeDB = !hostname.substring(0, 4).equals("0151");
+			System.out.println((homeDB ? "Home" : "School") + " DB used");
+		}
+		catch (UnknownHostException ex)
+		{
+			System.out.println("Hostname can not be resolved");
+		}
+
 		db = DBConnectionManager.getInstance();
 		initialize();
 
@@ -71,6 +100,9 @@ public class Main {
 				break;
 			case "EditLock":
 				SetUp.setScene(new EditGUI());
+				break;
+			case "DeleteLock":
+				SetUp.setScene(new DeleteGUI());
 				break;
 			default:
 				System.out.println("setStage() no case: " + key);
@@ -225,5 +257,13 @@ public class Main {
 
 	public static void changeLock(Lock oldLock, Lock newLock) {
 		db.changeLock(oldLock, newLock);
+	}
+
+	public static void clearAssignment(int serial) {
+		db.clearAssignment(serial);
+	}
+
+	public static void deleteLock(int serial) {
+		db.deleteLock(serial);
 	}
 }

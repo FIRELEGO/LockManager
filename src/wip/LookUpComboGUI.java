@@ -27,6 +27,7 @@ public class LookUpComboGUI extends GUI {
 		TableColumn<Lock, Integer> tcYearAdded = new TableColumn<Lock, Integer>("Year Added");
 		TableColumn<Lock, Integer> tcYearLastUsed = new TableColumn<Lock, Integer>("Year Last Used");
 		TableColumn<Lock, Integer> tcTotalUses = new TableColumn<Lock, Integer>("Total Uses");
+		TableColumn<Lock, String> tcAssignedLocker = new TableColumn<Lock, String>("Assigned Lock");
 
 		tcSerial.setCellValueFactory(new PropertyValueFactory<Lock, Integer>("serial"));
 		tcCombo.setCellValueFactory(new PropertyValueFactory<Lock, String>("combo"));
@@ -34,6 +35,7 @@ public class LookUpComboGUI extends GUI {
 		tcYearAdded.setCellValueFactory(new PropertyValueFactory<Lock, Integer>("yearAdded"));
 		tcYearLastUsed.setCellValueFactory(new PropertyValueFactory<Lock, Integer>("yearLastUsed"));
 		tcTotalUses.setCellValueFactory(new PropertyValueFactory<Lock, Integer>("totalUses"));
+		tcAssignedLocker.setCellValueFactory(new PropertyValueFactory<Lock, String>("assignedLocker"));
 
 		tvLocks.getColumns().add(tcSerial);
 		tvLocks.getColumns().add(tcCombo);
@@ -41,6 +43,7 @@ public class LookUpComboGUI extends GUI {
 		tvLocks.getColumns().add(tcYearAdded);
 		tvLocks.getColumns().add(tcYearLastUsed);
 		tvLocks.getColumns().add(tcTotalUses);
+		tvLocks.getColumns().add(tcAssignedLocker);
 
 		gpMain.add(tvLocks, 0, 1, 2, 1);
 		

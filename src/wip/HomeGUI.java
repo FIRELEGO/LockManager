@@ -23,7 +23,6 @@ public class HomeGUI extends GUI {
 		
 		// TODO not done functions
 		btnUnlockLock.setDisable(true);
-		btnDeleteLock.setDisable(true);
 		btnCheckLocker.setDisable(true);
 		
 		gpButtons.add(btnLookUp, 0, 0);

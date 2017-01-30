@@ -107,7 +107,7 @@ public class LookUpGUI extends GUI {
 			lblYearAddedT.setText("" + lock.getYearAdded());
 			lblYearUsedT.setText("" + (lock.getYearLastUsed() == 3000 ? "-" : lock.getYearLastUsed()));
 			lblTotalUsesT.setText("" + lock.getTotalUses());
-			lblAssignedLockerT.setText(Main.getAssignedLocker(lock.getSerial()));
+			lblAssignedLockerT.setText(lock.getAssignedLocker());
 		}
 	}
 

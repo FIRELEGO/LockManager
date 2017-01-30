@@ -1,6 +1,11 @@
 package wip;
 
+import java.util.Optional;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -16,7 +21,7 @@ public class AssignLockerGUI extends GUI {
 	private Label lblYearAdded = new Label("Year Added: ");
 	private Label lblYearAddedT = new Label("-");
 	private Button btnIncrement = new Button("+");
-	
+
 	private Button btnAssign = new MyButton("Assign");
 	private Button btnClear = new MyButton("Clear");
 	private Button btnBack = new MyButton("Back");
@@ -45,12 +50,12 @@ public class AssignLockerGUI extends GUI {
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
 	}
-	
+
 	private void increment() {
 		lblError.setText("");
 		try {
 			int lockerNum = Integer.parseInt(txtLockerNum.getText());
-			
+
 			txtLockerNum.setText("" + ++lockerNum);
 		} catch (NumberFormatException e) {
 			lblError.setText("Check that current locker number is an integer.");
@@ -64,18 +69,33 @@ public class AssignLockerGUI extends GUI {
 			int barcode = Integer.parseInt(txtBarcode.getText());
 			int lockerNum = Integer.parseInt(txtLockerNum.getText());
 			Lock lock = Main.searchBarcode(barcode);
-			
-			if (lock != null) {
-				Main.assignLocker(lock.getSerial(), "" + lockerNum, Main.getCurYear(), lock.getTotalUses());
-				
-				lblSuccess.setText("Success! Barcode: " + lock.getBarcode() + " Locker: " + lockerNum);
-				
-				Lock newLock = Main.searchSerial(lock.getSerial(), false);
-				lblTotalUsesT.setText("" + newLock.getTotalUses());
-				lblLastUsedT.setText("" + newLock.getYearLastUsed());
-				lblYearAddedT.setText("" + newLock.getYearAdded());
 
-				txtBarcode.setText("");
+			if (lock != null) {
+				boolean assign = true;
+				if(!lock.getAssignedLocker().equals("-")) {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Lock Already Assigned");
+					alert.setHeaderText("WARNING!");
+					alert.setContentText("This lock is currently assigned to a locker.\nCurrent locker: " + lock.getAssignedLocker() + "\tNew locker: " + lockerNum);
+
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get() != ButtonType.OK){
+					    assign = false;
+					}
+				}
+
+				if(assign) {
+					Main.assignLocker(lock.getSerial(), "" + lockerNum, Main.getCurYear(), lock.getTotalUses());
+
+					lblSuccess.setText("Success! Barcode: " + lock.getBarcode() + " Locker: " + lockerNum);
+
+					Lock newLock = Main.searchSerial(lock.getSerial(), false);
+					lblTotalUsesT.setText("" + newLock.getTotalUses());
+					lblLastUsedT.setText("" + newLock.getYearLastUsed());
+					lblYearAddedT.setText("" + newLock.getYearAdded());
+
+					txtBarcode.setText("");
+				}
 			} else {
 				lblError.setText("Barcode not found.");
 			}

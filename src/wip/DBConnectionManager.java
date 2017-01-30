@@ -36,7 +36,7 @@ public class DBConnectionManager {
 	private PreparedStatement psEditBarcode;
 	private PreparedStatement psSetUses;
 	private PreparedStatement psAssignLocker;
-	private PreparedStatement psClearOldAssign;
+	private PreparedStatement psClearAssignment;
 	private PreparedStatement psAddLock;
 	private PreparedStatement psChangeLock;
 	private PreparedStatement psSetLockUse;
@@ -44,6 +44,7 @@ public class DBConnectionManager {
 	private PreparedStatement psGetAssignedLocker;
 	private PreparedStatement psGetReportLength;
 	private PreparedStatement psGetReports;
+	private PreparedStatement psDeleteLock;
 	private PreparedStatement psAddReport;
 
 	private DBConnectionManager() throws ClassNotFoundException, SQLException {
@@ -105,7 +106,8 @@ public class DBConnectionManager {
 			psEditBarcode = conn.prepareStatement("UPDATE suncoast.lock SET Barcode=? WHERE Serial=?;");
 			psSetUses = conn.prepareStatement("UPDATE suncoast.lock SET TotalUses=? WHERE Serial=?;");
 			psAssignLocker = conn.prepareStatement("INSERT INTO suncoast.lockerassignment (LockerNum, Serial) VALUES (?, ?);");
-			psClearOldAssign = conn.prepareStatement("DELETE FROM suncoast.lockerassignment WHERE LockerNum=? OR Serial=?;");
+			psClearAssignment = conn.prepareStatement("DELETE FROM suncoast.lockerassignment WHERE LockerNum=? OR Serial=?;");
+			psDeleteLock = conn.prepareStatement("DELETE FROM suncoast.lock WHERE Serial=?;");
 			psAddLock = conn.prepareStatement("INSERT INTO suncoast.lock (Serial, Combo, Barcode, YearAdded, YearLastUsed, TotalUses) VALUES (?, ?, ?, ?, 3000, 0);");
 			psChangeLock = conn.prepareStatement("UPDATE suncoast.lock SET Serial=?, Combo=?, Barcode=?, YearAdded=?, YearLastUsed=?, TotalUses=? WHERE Serial=?;");
 			psSetLockUse = conn.prepareStatement("UPDATE suncoast.lock SET YearLastUsed=?, TotalUses=? WHERE Serial=?;");
@@ -127,7 +129,7 @@ public class DBConnectionManager {
 
 			ResultSet rs = psFindBySerialNew.executeQuery();
 			while(rs.next()) {
-				ret = new Lock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
+				ret = new Lock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), getAssignedLocker(rs.getInt(1)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -161,7 +163,7 @@ public class DBConnectionManager {
 			ResultSet rs = psFindByComboNew.executeQuery();
 
 			while(rs.next()) {
-				ret.add(new Lock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6)));
+				ret.add(new Lock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), getAssignedLocker(rs.getInt(1))));
 			}
 
 			psFindByComboOld.setString(1, combo);
@@ -185,7 +187,7 @@ public class DBConnectionManager {
 
 			ResultSet rs = psFindByBarcode.executeQuery();
 			while(rs.next()) {
-				ret = new Lock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
+				ret = new Lock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), getAssignedLocker(rs.getInt(1)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -245,13 +247,35 @@ public class DBConnectionManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public void clearAssignment(int serial) {
+		try {
+			psClearAssignment.setString(1, "-1");
+			psClearAssignment.setInt(2, serial);
+
+			psClearAssignment.execute();
+			System.out.println("Clear assignment " + serial);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteLock(int serial) {
+		try {
+			psDeleteLock.setInt(1, serial);
+
+			psDeleteLock.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void assignLocker(int serial, String lockerNum, int curYear, int curUses) {
 		try {
-			psClearOldAssign.setString(1, lockerNum);
-			psClearOldAssign.setInt(2, serial);
+			psClearAssignment.setString(1, lockerNum);
+			psClearAssignment.setInt(2, serial);
 
-			psClearOldAssign.execute();
+			psClearAssignment.execute();
 
 			psAssignLocker.setString(1, lockerNum);
 			psAssignLocker.setInt(2, serial);
@@ -305,7 +329,7 @@ public class DBConnectionManager {
 
 			ResultSet rs = stmt.executeQuery("SELECT * FROM suncoast.lock" + (!res.equals("") ? " WHERE" + res : ""));
 			while(rs.next()) {
-				locks.add(new Lock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6)));
+				locks.add(new Lock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), getAssignedLocker(rs.getInt(1))));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -415,7 +439,6 @@ public class DBConnectionManager {
 			psChangeLock.setInt(7, oldLock.getSerial());
 
 			psChangeLock.execute();
-			System.out.println(newLock.getSerial() + "\t" + oldLock.getSerial());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

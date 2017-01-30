@@ -3,9 +3,7 @@ package wip;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 
 public class EditGUI extends GUI {
@@ -24,6 +22,8 @@ public class EditGUI extends GUI {
 	private TextField txtYearUsed = new TextField("");
 	private Label lblTotalUses = new Label("Total Uses: ");
 	private TextField txtTotalUses = new TextField("");
+	private Label lblAssignedLocker = new Label("Assigned Locker: ");
+	private Label lblAssignedLockerT = new Label("-");
 
 	private Button btnChangeInfo = new MyButton("Change Info");
 	private Button btnClear = new MyButton("Clear");
@@ -47,6 +47,8 @@ public class EditGUI extends GUI {
 		gpMain.add(txtYearUsed, 1, 5);
 		gpMain.add(lblTotalUses, 0, 6);
 		gpMain.add(txtTotalUses, 1, 6);
+		gpMain.add(lblAssignedLocker, 0, 7);
+		gpMain.add(lblAssignedLockerT, 1, 7);
 
 		txtBarcode.setDisable(true);
 		txtCombo.setDisable(true);
@@ -84,6 +86,7 @@ public class EditGUI extends GUI {
 			txtYearAdded.setText("" + lock.getYearAdded());
 			txtYearUsed.setText("" + (lock.getYearLastUsed() == 3000 ? "" : lock.getYearLastUsed()));
 			txtTotalUses.setText("" + lock.getTotalUses());
+			lblAssignedLockerT.setText(lock.getAssignedLocker());
 
 			txtSerial.setDisable(true);
 			txtBarcode.setDisable(false);
@@ -102,9 +105,13 @@ public class EditGUI extends GUI {
 		lblError.setText("");
 		lblSuccess.setText("");
 		try {
-			Main.changeLock(lock, new Lock(Integer.parseInt(txtSerial.getText()), txtCombo.getText(), Integer.parseInt(txtBarcode.getText()), Integer.parseInt(txtYearAdded.getText()), Integer.parseInt(txtYearUsed.getText()), Integer.parseInt(txtTotalUses.getText())));
+			if(Main.searchBarcode(Integer.parseInt(txtBarcode.getText())) == null) {
+			Main.changeLock(lock, new Lock(Integer.parseInt(txtSerial.getText()), txtCombo.getText(), Integer.parseInt(txtBarcode.getText()), Integer.parseInt(txtYearAdded.getText()), Integer.parseInt(txtYearUsed.getText()), Integer.parseInt(txtTotalUses.getText()), lblAssignedLockerT.getText()));
 			lblSuccess.setText("Lock info chagned.");
 			clear();
+			} else {
+				lblError.setText("Barcode already in use.");
+			}
 		} catch(NumberFormatException e) {
 			lblError.setText("Check that all info is of the correct format.");
 		}
@@ -118,6 +125,7 @@ public class EditGUI extends GUI {
 		txtYearAdded.setText("");
 		txtYearUsed.setText("");
 		txtTotalUses.setText("");
+		lblAssignedLockerT.setText("-");
 
 		txtSerial.setDisable(false);
 		txtBarcode.setDisable(true);
