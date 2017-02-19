@@ -49,6 +49,8 @@ public class AddLockGUI extends GUI {
 		btnAdd.setOnAction(e -> add());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
+		
+		enterBtn = btnAdd;
 	}
 
 	private void checkButton() {
@@ -80,6 +82,7 @@ public class AddLockGUI extends GUI {
 					Integer.parseInt(temp);
 				}
 
+				Main.log("Lock with serial " + serial + " added.");
 				Main.addLock(serial, combo, barcode, yearAdded);
 
 				Alert alert = new Alert(AlertType.INFORMATION);
@@ -145,6 +148,8 @@ public class AddLockGUI extends GUI {
 		lblYearAddedT.setText("-");
 		btnAdd.setDisable(true);
 		btnCheckForExisting.setText("Check for Existing");
+		
+		txtSerial.requestFocus();
 	}
 
 	private void newSerial() {

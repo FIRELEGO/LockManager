@@ -51,5 +51,7 @@ public class ListGUI extends GUI {
 		
 		btnBack.setOnAction(e -> Main.setStage("Home"));
 		gpButtons.add(btnBack, 0, 0);
+
+		Main.log("Lock list viewed.");
 	}
 }

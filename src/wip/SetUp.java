@@ -6,20 +6,32 @@ package wip;
 import java.io.File;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class SetUp extends Application {
 
-	public static Stage stage = new Stage();
+	public static Stage stage = null;
 	private static int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
 	private static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		setScene(new HomeGUI());
+		SetUp.stage = stage;
+		stage.getIcons().add(new Image("file:res/lock.png"));
+		
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		    @Override public void handle(WindowEvent t) {
+		        Main.exit();
+		    }
+		});
+		
+		setScene(new LoginGUI());
 	}
 
 	public static void setScene(GUI scene) {
@@ -29,6 +41,9 @@ public class SetUp extends Application {
 		stage.setX((screenWidth / 2) - (dim[0] / 2));
 		stage.setY((screenHeight / 2) - (dim[1] / 2));
 		stage.show();
+		if(scene.getFocusElement() != null) {
+			scene.getFocusElement().requestFocus();
+		}
 	}
 
 	public static String openFC(File directory, String name) {

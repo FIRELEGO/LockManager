@@ -1,9 +1,12 @@
 package wip;
 
+import java.util.Optional;
+
 import javafx.geometry.HPos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -56,6 +59,8 @@ public class AssignBarcodeGUI extends GUI {
 		btnAssign.setOnAction(e -> assign());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
+		
+		enterBtn = btnAssign;
 	}
 
 	private void assign() {
@@ -66,16 +71,32 @@ public class AssignBarcodeGUI extends GUI {
 			int barcode = Integer.parseInt(txtBarcode.getText());
 
 			if (Main.searchBarcode(barcode) == null) {
-				Main.editBarcode(serial, barcode);
+				boolean assign = true;
+				if(Main.searchSerial(serial, false).getBarcode() != -1 && Main.searchSerial(serial, false).getBarcode() != barcode) {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Lock already assigned to barcode");
+					alert.setHeaderText("WARNING!");
+					alert.setContentText("This lock is currently assigned to barcode " + Main.searchSerial(serial, false).getBarcode() + " it will be assigned to barcode " + barcode + "\nClicking \"Ok\" will reassign the lock.");
 
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Barcode Change Success");
-				alert.setHeaderText("Success!");
-				alert.setContentText("Barcode was succesfully changed.\nSerial: " + serial + "\tBarcode: " + barcode);
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get() != ButtonType.OK){
+						assign = false;
+					}
+				}
 
-				alert.showAndWait();
+				if(assign) {
+					Main.log("Barcode " + barcode + " assiged to lock serial " + serial);
+					Main.editBarcode(serial, barcode);
 
-				Main.setStage("Home");
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Barcode Change Success");
+					alert.setHeaderText("Success!");
+					alert.setContentText("Barcode was succesfully changed.\nSerial: " + serial + "\tBarcode: " + barcode);
+
+					alert.showAndWait();
+
+					Main.setStage("Home");
+				}
 			} else {
 				lblError.setText("Barcode already in use.");
 			}
@@ -97,6 +118,8 @@ public class AssignBarcodeGUI extends GUI {
 				lblYearLastUsedT.setText("" + (lock.getYearLastUsed() == 3000 ? "-" : lock.getYearLastUsed()));
 				lblTotalUsesT.setText("" + lock.getTotalUses());
 				btnAssign.setDisable(false);
+				
+				txtBarcode.requestFocus();
 			} else {
 				lblError.setText("Lock not found. Check serial and try again.");
 			}
@@ -113,5 +136,7 @@ public class AssignBarcodeGUI extends GUI {
 		lblYearLastUsedT.setText("-");
 		lblTotalUsesT.setText("-");
 		btnAssign.setDisable(true);
+		
+		txtSerial.requestFocus();
 	}
 }

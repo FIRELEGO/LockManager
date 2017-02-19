@@ -4,16 +4,15 @@
  */
 package wip;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Scanner;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,21 +23,22 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
 /* TODO features
- * make log
- * remove all locker assignments
- * add keybinding and textbox focusing
- * locker assignment protection (rn a locker can be assigned to a locker with a lock already on it without warning of the old lock being bumped off.)
- * allow to delete lock with reports (rn delete will fail because report has foreign key on lock)
+ * check all confirmation message types. alert vs line
+ * comment code
+ * fix report system
+ * fix data sheet generation (Check that user entered data into restrictions)
+ * figure out locker floor system
+ * assign locker problem
  */
 
 public class Main {
 	// TODO remove from final
 	public static boolean homeDB = true;
+	public static Account user;
 
 	public static final String VERSION = "0.7.0";
 
 	private static DBConnectionManager db;
-	private static HashMap<String, String> hmSettings = new HashMap<String, String>();
 
 	public static void main(String[] args) {
 
@@ -61,11 +61,11 @@ public class Main {
 		}
 
 		db = DBConnectionManager.getInstance();
-		initialize();
 
 		Application.launch(SetUp.class, args);
 	}
 
+	// Called from GUIs to change the screen to a new GUI. Usually triggered by button press
 	public static void setStage(String key) {
 		switch(key) {
 			case "Home":
@@ -110,6 +110,7 @@ public class Main {
 		}	
 	}
 
+	// Finds Serial in database. Can also search old DB for locks (Can search old DB)
 	public static Lock searchSerial(int serial, boolean checkOld) {
 		Lock ret;
 
@@ -121,7 +122,7 @@ public class Main {
 		return ret;
 	}
 
-
+	// Finds Barcode in database. Can also search old DB for locks
 	public static Lock searchBarcode(int barcode) {
 		Lock ret;
 
@@ -130,42 +131,54 @@ public class Main {
 		return ret;
 	}
 
+	// Change the barcode on a lock with a given serial
 	public static void editBarcode(int serial, int barcode) {
 		db.editBarcode(serial, barcode);
 	}
 
+	// Change the uses on a lock with a given serial
 	public static void setUses(int serial, int uses) {
 		db.setUses(serial, uses);
 	}
 
+	// Add a lock to the new DB
 	public static void addLock(int serial, String combo, int barcode, int yearAdded) {
 		db.addLock(serial, combo, barcode, yearAdded);
 	}
 
+	// Assign a lock to a locker and update relevant lock info
 	public static void assignLocker(int serial, String lockerNum, int curYear, int curUses) {
 		db.assignLocker(serial, lockerNum, curYear, curUses);
 	}
 
+	// Gets the locker assign to a lock
 	public static String getAssignedLocker(int serial) {
 		return db.getAssignedLocker(serial);
 	}
 
+	// Gets the current year
 	public static int getCurYear() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy");
 		Date date = new Date();
 		return Integer.parseInt(dateFormat.format(date));
 	}
 
+	// Gets an Observable list of locks given a combo (Can check old DB)
 	public static ObservableList<Lock> searchCombo(String combo, boolean checkOld) {
 		return db.searchCombo(combo, checkOld);
 	}
 
+	// Method called to exit the program
 	public static void exit() {
 		//		save(); TODO
 
-		Platform.exit();
+		if(user != null) {
+			Main.log("Logged off.");
+		}
+		System.exit(0);
 	}
 
+	// Removes locks which haven't been used in over 10 years
 	public static void purgeLocks() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Purge Locks");
@@ -175,6 +188,7 @@ public class Main {
 		alert.showAndWait();
 
 		if(alert.getResult() == ButtonType.OK) {
+			Main.log("All locks lasted used before " + (getCurYear() - 10) + " have been purged.");
 			db.purgeLocks(getCurYear());
 
 			Alert alertDone = new Alert(AlertType.INFORMATION);
@@ -191,79 +205,114 @@ public class Main {
 		}
 	}
 
-	private static void initialize() {
-		try {
-			Scanner scanTxt = new Scanner(new File("./res/settings.ini"));
+	// Deletes all locker assignments
+	public static void releaseAllLockers() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Release All Locks");
+		alert.setHeaderText("Release all lockers into circulation.");
+		alert.setContentText("Are you sure you want to remove all locks from their assigned locker?\nCick \"Ok\" to continue with this operation or \"Cancel\" to cancel and keep all locks in database.");
 
-			while (scanTxt.hasNext()) {
-				String[] temp = scanTxt.nextLine().split(",");
-				setSetting(temp[0], temp[1]);
-			}
+		alert.showAndWait();
 
-			scanTxt.close();
-		} catch (FileNotFoundException e) {
-			System.err.println("ini file not found.");
-			e.printStackTrace();
+		if(alert.getResult() == ButtonType.OK) {
+			Main.log("All lockers released to circulation.");
+			db.releaseLockers();
+
+			Alert alertDone = new Alert(AlertType.INFORMATION);
+			alertDone.setTitle("Release Lockers");
+			alertDone.setHeaderText("All lockers released.");
+
+			alertDone.showAndWait();
+		} else {
+			Alert alertCanceled = new Alert(AlertType.INFORMATION);
+			alertCanceled.setTitle("Release Lockers");
+			alertCanceled.setHeaderText("Locker release canceled.");
+
+			alertCanceled.showAndWait();
 		}
 	}
 
-	public static String getSetting(String settingName) {
-		return hmSettings.get(settingName);
+	// Hashes string input to MD5
+	public static String hash(String in) {
+		String ret = "";
+		MessageDigest m;
+
+		try {
+			m = MessageDigest.getInstance("MD5");
+			m.update(in.getBytes(),0,in.length());
+			ret = new BigInteger(1,m.digest()).toString(16);
+		} catch (NoSuchAlgorithmException e) {
+			System.err.println("Hashing error");
+			e.printStackTrace();
+		}
+
+		return ret;
 	}
 
-	public static String setSetting(String settingName, String value) {
-		return hmSettings.put(settingName, value);
-	}
-
+	// Gets all of the locks given certain SQL restrictions
 	public static Lock[] getLocks(String res) {
 		return db.getLocks(res);
 	}
 
+	// Gets all of the lockers given certain SQL restrictions
 	public static String[][] getLocker(String res) {
 		return db.getLockers(res);
 	}
 
-	public static int addReport(int lockSerial, String priority, String progress, String date) {
-		return db.addReport(lockSerial, priority, progress, date);
+	// Clears all reports made for a certain lock
+	public static void deleteReportsByLock(int serial) {
+		db.deleteReportsByLock(serial);
 	}
 
+	// Adds a report to the DB
+	public static void addReport(int lockSerial, String priority, String progress, String date) {
+		db.addReport(lockSerial, priority, progress, date);
+	}
+
+	// Gets reports from DB
 	public static ObservableList<Report> getReports() {
 		ObservableList<Report> reports = FXCollections.observableArrayList();
-		Object[][] data = db.getReports();
-		ArrayList<String[]> txtParts = new ArrayList<String[]>();
+		ArrayList<Report> data = db.getReports();
 
-		Scanner scanTxt;
-		try {
-			scanTxt = new Scanner(new File("res/reports.csv"));
-			while(scanTxt.hasNextLine()) {
-				String[] line = scanTxt.nextLine().split(",");
-				txtParts.add(new String[]{line[0], line[1]});
-			}
-			scanTxt.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		for(int i = 0; i < data.length; i++) {
-			for(int j = 0; j < txtParts.size(); j++) {
-				if(txtParts.get(j)[0].equals("" +data[i][0])) {
-					reports.add(new Report((int) data[i][0], (int) data[i][1], (String) data[i][2], (String) data[i][3], (String) data[i][4], txtParts.get(i)[1]));
-				}
-			}
+		for(int i = 0; i < data.size(); i++) {
+					reports.add(data.get(0));
 		}
 
 		return reports;
 	}
 
+	// Allows to edit lock information in DB
 	public static void changeLock(Lock oldLock, Lock newLock) {
 		db.changeLock(oldLock, newLock);
 	}
 
+	// Removes a lock assignment form a locker
 	public static void clearAssignment(int serial) {
 		db.clearAssignment(serial);
 	}
 
+	// Removes Lock from DB
 	public static void deleteLock(int serial) {
 		db.deleteLock(serial);
+	}
+
+	// Checks if lock or locker already has assignment
+	public static String[][] checkAssignment(String lockerNum, int serial) {
+		return db.checkAssignment(lockerNum, serial);
+	}
+
+	// Gets all the reports for a lock
+	public static ArrayList<Report> getReportsForLock(int serial) {
+		return db.getReportsForLock(serial);
+	}
+
+	// Gets user from DB
+	public static Account getUser(String username) {
+		return db.getUser(username);
+	}
+
+	// Logs event into DB
+	public static void log(String info) {
+		db.log(user.getUsername(), info);
 	}
 }

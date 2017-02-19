@@ -49,6 +49,8 @@ public class AssignLockerGUI extends GUI {
 		btnAssign.setOnAction(e -> assign());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
+		
+		enterBtn = btnAssign;
 	}
 
 	private void increment() {
@@ -67,16 +69,33 @@ public class AssignLockerGUI extends GUI {
 
 		try {
 			int barcode = Integer.parseInt(txtBarcode.getText());
-			int lockerNum = Integer.parseInt(txtLockerNum.getText());
+			String lockerNum = txtLockerNum.getText();
 			Lock lock = Main.searchBarcode(barcode);
 
 			if (lock != null) {
+			String[][] assignments = Main.checkAssignment(lockerNum, lock.getSerial());
 				boolean assign = true;
-				if(!lock.getAssignedLocker().equals("-")) {
+				if(assignments[0][0] != null || assignments[1][0] != null) {
+					String message = "";
+					if(assignments[0][0] != null) {
+						if(assignments[0][0].equals(lockerNum)) {
+							message += "The locker already has lock serial: " + assignments[0][1];
+						} else if(assignments[0][1].equals("" + lock.getSerial())) {
+							message += "This lock is currently assigned to a locker number: " + assignments[0][0];
+						}
+					}
+					if(assignments[1][0] != null) {
+						if(assignments[1][0].equals(lockerNum)) {
+							message += (message.isEmpty() ? "" : "\n") + "The locker already has lock serial: " + assignments[1][1];
+						} else if(assignments[1][1].equals("" + lock.getSerial())) {
+							message += (message.isEmpty() ? "" : "\n") + "This lock is currently assigned to a locker number: " + assignments[1][0];
+						}
+					}
+					
 					Alert alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Lock Already Assigned");
 					alert.setHeaderText("WARNING!");
-					alert.setContentText("This lock is currently assigned to a locker.\nCurrent locker: " + lock.getAssignedLocker() + "\tNew locker: " + lockerNum);
+					alert.setContentText(message + "\nWould you like to remove these assignments and continue with the assignment?");
 
 					Optional<ButtonType> result = alert.showAndWait();
 					if (result.get() != ButtonType.OK){
@@ -85,6 +104,7 @@ public class AssignLockerGUI extends GUI {
 				}
 
 				if(assign) {
+					Main.log("Lock serial " + lock.getSerial() + " assiged to locker number " + lockerNum);
 					Main.assignLocker(lock.getSerial(), "" + lockerNum, Main.getCurYear(), lock.getTotalUses());
 
 					lblSuccess.setText("Success! Barcode: " + lock.getBarcode() + " Locker: " + lockerNum);
@@ -106,5 +126,7 @@ public class AssignLockerGUI extends GUI {
 
 	private void clear() {
 		txtBarcode.setText("");
+		
+		txtBarcode.requestFocus();
 	}
 }

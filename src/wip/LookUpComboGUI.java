@@ -16,7 +16,7 @@ public class LookUpComboGUI extends GUI {
 	private Button btnBack = new MyButton("Back");
 	
 	public LookUpComboGUI() {
-		super(500, 600, "Look Up by Combo");
+		super(560, 600, "Look Up by Combo");
 
 		gpMain.add(lblCombo, 0, 0);
 		gpMain.add(txtCombo, 1, 0);
@@ -67,6 +67,7 @@ public class LookUpComboGUI extends GUI {
 				for(String temp : comboNums) {
 					Integer.parseInt(temp);
 				}
+				Main.log("Looked up all with the combo " + combo);
 				tvLocks.setItems(Main.searchCombo(combo, true)); // TODO allow conversion from old to new and recofigure for obseravable list. (No reseting the items every time, just mod the list)
 			}
 		} catch (NumberFormatException e) {

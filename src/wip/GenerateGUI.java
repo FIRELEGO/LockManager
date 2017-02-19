@@ -252,6 +252,8 @@ public class GenerateGUI extends GUI {
 		btnCreate.setOnAction(e -> create());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
+		
+		enterBtn = btnCreate;
 	}
 
 	private void create() {
@@ -286,6 +288,7 @@ public class GenerateGUI extends GUI {
 
 			DateFormat dateFormat = new SimpleDateFormat("MM-dd-YYYY");
 			Date date = new Date();
+			Main.log("Data sheet generated");
 			Pdf.createLockPDF(txtPath.getText(), dateFormat.format(date), res, data);
 		} else { // TODO figure our locker num and floor system
 			boolean[] reses = {false, false};

@@ -57,4 +57,13 @@ public class Lock {
 	public String getAssignedLocker() {
 		return assignedLocker;
 	}
+	
+	public boolean equals(Lock lock) {
+		return serial == lock.getSerial();
+	}
+
+	@Override
+	public String toString() {
+		return "Lock [serial=" + serial + ", combo=" + combo + ", barcode=" + barcode + ", yearAdded=" + yearAdded + ", yearLastUsed=" + yearLastUsed + ", totalUses=" + totalUses + ", assignedLocker=" + assignedLocker + "]";
+	}
 }

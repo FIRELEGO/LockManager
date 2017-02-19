@@ -41,5 +41,7 @@ public class ViewReportsGUI extends GUI {
 		btnBack.setOnAction(e -> Main.setStage("Home"));
 		
 		gpButtons.add(btnBack, 0, 0);
+		
+		Main.log("Lock reports viewed.");
 	}
 }

@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class DBConnectionManager {
+	// Sets address of DB based on location
 	private static final String DB_COMP_NAME = Main.homeDB ? "localhost" : "0151T3105C47541";
 	// TODO OLD_DB_COMP_NAME will be independent once fully released
 	private static final String OLD_DB_COMP_NAME = DB_COMP_NAME;
@@ -37,15 +38,20 @@ public class DBConnectionManager {
 	private PreparedStatement psSetUses;
 	private PreparedStatement psAssignLocker;
 	private PreparedStatement psClearAssignment;
+	private PreparedStatement psCheckAssignment;
 	private PreparedStatement psAddLock;
+	private PreparedStatement psDeleteReportsBySerial;
 	private PreparedStatement psChangeLock;
 	private PreparedStatement psSetLockUse;
 	private PreparedStatement psPurgeOldLocks;
+	private PreparedStatement psReleaseLockers;
 	private PreparedStatement psGetAssignedLocker;
-	private PreparedStatement psGetReportLength;
 	private PreparedStatement psGetReports;
+	private PreparedStatement psGetReportsForLock;
 	private PreparedStatement psDeleteLock;
 	private PreparedStatement psAddReport;
+	private PreparedStatement psGetUser;
+	private PreparedStatement psLog;
 
 	private DBConnectionManager() throws ClassNotFoundException, SQLException {
 		// Set up database connection
@@ -56,7 +62,8 @@ public class DBConnectionManager {
 		conn = DriverManager.getConnection(dbURL, user, pass);
 		oldConn = DriverManager.getConnection(oldDbURL, user, pass);
 
-		makePS();		
+		// Makes all the prepared statements
+		makePS();
 	}
 
 	public static DBConnectionManager getInstance() {
@@ -107,15 +114,21 @@ public class DBConnectionManager {
 			psSetUses = conn.prepareStatement("UPDATE suncoast.lock SET TotalUses=? WHERE Serial=?;");
 			psAssignLocker = conn.prepareStatement("INSERT INTO suncoast.lockerassignment (LockerNum, Serial) VALUES (?, ?);");
 			psClearAssignment = conn.prepareStatement("DELETE FROM suncoast.lockerassignment WHERE LockerNum=? OR Serial=?;");
+			psCheckAssignment = conn.prepareStatement("SELECT * FROM suncoast.lockerassignment WHERE LockerNum=? OR Serial=?;");
 			psDeleteLock = conn.prepareStatement("DELETE FROM suncoast.lock WHERE Serial=?;");
+			psDeleteReportsBySerial = conn.prepareStatement("DELETE FROM suncoast.reports WHERE LockSerial=?;");
 			psAddLock = conn.prepareStatement("INSERT INTO suncoast.lock (Serial, Combo, Barcode, YearAdded, YearLastUsed, TotalUses) VALUES (?, ?, ?, ?, 3000, 0);");
 			psChangeLock = conn.prepareStatement("UPDATE suncoast.lock SET Serial=?, Combo=?, Barcode=?, YearAdded=?, YearLastUsed=?, TotalUses=? WHERE Serial=?;");
 			psSetLockUse = conn.prepareStatement("UPDATE suncoast.lock SET YearLastUsed=?, TotalUses=? WHERE Serial=?;");
 			psPurgeOldLocks = conn.prepareStatement("DELETE FROM suncoast.lock WHERE YearAdded<?;");
+			psReleaseLockers = conn.prepareStatement("DELETE FROM suncoast.lockerassignment;");
 			psGetAssignedLocker = conn.prepareStatement("SELECT * FROM suncoast.lockerassignment WHERE Serial=?;");
-			psGetReportLength = conn.prepareStatement("SELECT count(*) FROM suncoast.reports;");
+			conn.prepareStatement("SELECT count(*) FROM suncoast.reports;");
 			psGetReports = conn.prepareStatement("SELECT * FROM suncoast.reports;");
+			psGetReportsForLock = conn.prepareStatement("SELECT * FROM suncoast.reports WHERE LockSerial = ?;");
 			psAddReport = conn.prepareStatement("INSERT INTO suncoast.reports (ReportID, LockSerial, Priority, Progress, Date) VALUES (?, ?, ?, ?, ?);");
+			psGetUser = conn.prepareStatement("SELECT * FROM suncoast.account_copy WHERE Username=?;");
+			psLog = conn.prepareStatement("INSERT INTO suncoast.log (Username, Info) VALUES (?, ?);");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -196,6 +209,28 @@ public class DBConnectionManager {
 		return ret;
 	}
 
+	public String[][] checkAssignment(String lockerNum, int serial) {
+		String[][] ret = new String[2][2];
+
+		try {
+			psCheckAssignment.setString(1, lockerNum);
+			psCheckAssignment.setInt(2, serial);
+
+			ResultSet rs = psCheckAssignment.executeQuery();
+			if(rs.next()) {
+				ret[0] = new String[] {rs.getString(1), "" + rs.getInt(2)};
+			}
+
+			if(rs.next()) {
+				ret[1] = new String[] {rs.getString(1), "" + rs.getInt(2)};
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return ret;
+	}
+
 	public String getAssignedLocker(int serial) {
 		String ret = "";
 
@@ -206,6 +241,23 @@ public class DBConnectionManager {
 			boolean hasResult = rs.isBeforeFirst();
 			rs.next();
 			ret = !hasResult ? "-" : rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return ret;
+	}
+	
+	public ArrayList<Report> getReportsForLock(int serial) {
+		ArrayList<Report> ret = new ArrayList<Report>();
+
+		try {
+			psGetReportsForLock.setInt(1, serial);
+
+			ResultSet rs = psGetReportsForLock.executeQuery();
+			while(rs.next()) {
+				ret.add(new Report(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), ""));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -247,19 +299,18 @@ public class DBConnectionManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void clearAssignment(int serial) {
 		try {
 			psClearAssignment.setString(1, "-1");
 			psClearAssignment.setInt(2, serial);
 
 			psClearAssignment.execute();
-			System.out.println("Clear assignment " + serial);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void deleteLock(int serial) {
 		try {
 			psDeleteLock.setInt(1, serial);
@@ -270,6 +321,16 @@ public class DBConnectionManager {
 		}
 	}
 
+	public void deleteReportsByLock(int serial) {
+		try {
+			psDeleteReportsBySerial.setInt(1, serial);
+
+			psDeleteReportsBySerial.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void assignLocker(int serial, String lockerNum, int curYear, int curUses) {
 		try {
 			psClearAssignment.setString(1, lockerNum);
@@ -369,65 +430,35 @@ public class DBConnectionManager {
 		return ret;
 	}
 
-	private int reportLength() {
-		int ret = 0;
 
+	public void addReport(int lockSerial, String priority, String progress, String date) {
 		try {
-			ResultSet rs = psGetReportLength.executeQuery();
-			rs.next();
-
-			ret = rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return ret;
-	}
-	
-	public int addReport(int lockSerial, String priority, String progress, String date) {
-		int reportID = reportLength();
-		
-		try {
-			psAddReport.setInt(1, reportID);
-			psAddReport.setInt(2, lockSerial);
-			psAddReport.setString(3, priority);
-			psAddReport.setString(4, progress);
-			psAddReport.setString(5, date);
+			psAddReport.setInt(1, lockSerial);
+			psAddReport.setString(2, priority);
+			psAddReport.setString(3, progress);
+			psAddReport.setString(4, date);
 
 			psAddReport.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		return reportID;
 	}
-	
-	public Object[][] getReports() {
 
-		ArrayList<Object[]> data = new ArrayList<Object[]>();
+	public ArrayList<Report> getReports() {
+		ArrayList<Report> ret = new ArrayList<Report>();
 
 		try {
 			ResultSet rs = psGetReports.executeQuery();
 			while(rs.next()) {
-				data.add(new Object[]{rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)});
+				ret.add(new Report(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		Object[][] ret = new Object[data.size()][5];
-
-		for(int k = 0; k < ret.length; k++) {
-			ret[k][0] = data.get(k)[0];
-			ret[k][1] = data.get(k)[1];
-			ret[k][2] = data.get(k)[2];
-			ret[k][3] = data.get(k)[3];
-			ret[k][4] = data.get(k)[4];
-		}
-
 		return ret;
 	}
-	
+
 	public void changeLock(Lock oldLock, Lock newLock) {
 		try {
 			psChangeLock.setInt(1, newLock.getSerial());
@@ -439,6 +470,41 @@ public class DBConnectionManager {
 			psChangeLock.setInt(7, oldLock.getSerial());
 
 			psChangeLock.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void releaseLockers() {
+		try {
+			psReleaseLockers.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Account getUser(String  username) {
+		Account ret = null;
+		try {
+			psGetUser.setString(1, username);
+			ResultSet rs = psGetUser.executeQuery();
+
+			while(rs.next()) {
+				ret = new Account(rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8), rs.getBoolean(9), rs.getInt(16));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return ret;
+	}
+	
+	public void log(String username, String info) {
+		try {
+			psLog.setString(1, username);
+			psLog.setString(2, info);
+
+			psLog.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

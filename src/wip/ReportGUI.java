@@ -1,13 +1,8 @@
 package wip;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -58,6 +53,8 @@ public class ReportGUI extends GUI {
 		btnSubmit.setOnAction(e -> submit());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
+		
+		enterBtn = btnSubmit;
 	}
 
 	private void updateLength()	{
@@ -72,6 +69,7 @@ public class ReportGUI extends GUI {
 			lblError.setText("Complaint is over 200 characaters.");
 		} else {
 			try {
+				System.out.println("|" + txtSerial.getText() + "|");
 				int serial = Integer.parseInt(txtSerial.getText());
 
 				if(cbPriority.getSelectionModel().getSelectedItem() == null) {
@@ -83,29 +81,13 @@ public class ReportGUI extends GUI {
 				} else {
 					DateFormat dateFormat = new SimpleDateFormat("MM-dd-YY");
 					Date date = new Date();
-					int reportID = Main.addReport(serial, cbPriority.getSelectionModel().getSelectedItem(), "SUBMITED", dateFormat.format(date));
-					Scanner scanTxt = new Scanner(new File("res/reports.csv"));
-					ArrayList<String> lines = new ArrayList<String>();
-					
-					while(scanTxt.hasNextLine()) {
-						lines.add(scanTxt.nextLine());
-					}
-					
-					scanTxt.close();
-					PrintWriter print = new PrintWriter(new File("res/reports.csv"));
-					
-					for(String temp : lines) {
-						print.println(temp);
-					}
-					
-					print.println(reportID + "," + txtComplaint.getText().replace(",", "|"));
-					
-					print.close();
+					Main.addReport(serial, cbPriority.getSelectionModel().getSelectedItem(), "SUBMITED", dateFormat.format(date));
+					Main.log("Report filed.");
 					
 					clear();
 					lblSuccess.setText("Report filed.");
 				}
-			} catch(NumberFormatException | FileNotFoundException e) {
+			} catch(NumberFormatException e) {
 				lblError.setText("Check that serial is a number.");
 			}
 		}
@@ -115,5 +97,7 @@ public class ReportGUI extends GUI {
 		txtSerial.setText("");
 		cbPriority.getSelectionModel().clearSelection();
 		txtComplaint.setText("");
+		
+		txtSerial.requestFocus();
 	}
 }

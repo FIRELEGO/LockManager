@@ -15,7 +15,7 @@ public class HomeGUI extends GUI {
 	private Button btnViewReports = new MyButton("View Reports");
 	private Button btnGenerate = new MyButton("Generate Data Sheet");
 	private Button btnList = new MyButton("List");
-	private Button btnCheckLocker = new MyButton("Check Locker Assignment");
+	private Button btnReleaseAllLocker = new MyButton("Release All Lockers");
 	private Button btnExit = new MyButton("Exit Program");
 
 	public HomeGUI() {
@@ -23,7 +23,6 @@ public class HomeGUI extends GUI {
 		
 		// TODO not done functions
 		btnUnlockLock.setDisable(true);
-		btnCheckLocker.setDisable(true);
 		
 		gpButtons.add(btnLookUp, 0, 0);
 		gpButtons.add(btnAddLock, 1, 0);
@@ -37,8 +36,8 @@ public class HomeGUI extends GUI {
 		gpButtons.add(btnViewReports, 0, 3);
 		gpButtons.add(btnGenerate, 1, 3);
 		gpButtons.add(btnList, 2, 3);
-		gpButtons.add(btnCheckLocker, 1, 4);
-		gpButtons.add(btnExit, 1, 4);
+		gpButtons.add(btnReleaseAllLocker, 1, 4);
+		gpButtons.add(btnExit, 1, 5);
 
 		btnLookUp.setOnAction(e -> Main.setStage("LookUp"));
 		btnAddLock.setOnAction(e -> Main.setStage("AddLock"));
@@ -52,7 +51,7 @@ public class HomeGUI extends GUI {
 		btnViewReports.setOnAction(e -> Main.setStage("ViewReports"));
 		btnGenerate.setOnAction(e -> Main.setStage("Generate"));
 		btnList.setOnAction(e -> Main.setStage("List"));
-		btnCheckLocker.setOnAction(e -> Main.setStage("CheckLocker"));
+		btnReleaseAllLocker.setOnAction(e -> Main.releaseAllLockers());
 		btnExit.setOnAction(e -> Main.exit());
 	}
 }

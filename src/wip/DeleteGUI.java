@@ -35,7 +35,7 @@ public class DeleteGUI extends GUI {
 	private Button btnBack = new MyButton("Back");
 
 	public DeleteGUI() {
-		super(500, 450, "Look Up Lock");
+		super(500, 450, "Delete Lock");
 
 		gpMain.add(lblSerial, 0, 0);
 		gpMain.add(txtSerial, 1, 0);
@@ -64,6 +64,8 @@ public class DeleteGUI extends GUI {
 		btnDelete.setOnAction(e -> delete());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
+		
+		enterBtn = btnDelete;
 	}
 
 	private void lookUp() {
@@ -88,7 +90,7 @@ public class DeleteGUI extends GUI {
 
 			btnCheckForExisting.setDisable(true);
 			txtSerial.setDisable(true);
-			
+
 			btnDelete.setDisable(false);
 		}
 	}
@@ -106,15 +108,18 @@ public class DeleteGUI extends GUI {
 		btnCheckForExisting.setDisable(false);
 		txtSerial.setDisable(false);
 		btnDelete.setDisable(true);
+		
+		txtSerial.requestFocus();
 	}
 
 	private void delete() {
 		boolean delete = true;
 		boolean locker = false;
-		
+		boolean report = false;
+
 		if(!lock.getAssignedLocker().equals("-")) {
 			locker = true;
-			
+
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Lock Assigned to Locker");
 			alert.setHeaderText("WARNING!");
@@ -122,7 +127,22 @@ public class DeleteGUI extends GUI {
 
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() != ButtonType.OK){
-			    delete = false;
+				delete = false;
+			}
+		}
+		
+		int numOfReports = Main.getReportsForLock(lock.getSerial()).size();
+		if(numOfReports > 0) {
+			report = true;
+
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Lock Assigned to Report");
+			alert.setHeaderText("WARNING!");
+			alert.setContentText("This lock is currently assigned to " + numOfReports + " " + (numOfReports == 1 ? "report." : "reports.") + "\nDeleting it will remove these reports.");
+
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() != ButtonType.OK){
+				delete = false;
 			}
 		}
 
@@ -131,6 +151,11 @@ public class DeleteGUI extends GUI {
 				Main.clearAssignment(lock.getSerial());
 			}
 			
+			if(report) {
+				Main.deleteReportsByLock(lock.getSerial());
+			}
+
+			Main.log("Lock serial " + lock.getSerial() + " deleted.");
 			Main.deleteLock(lock.getSerial());
 
 			lblSuccess.setText("Success! Lock deleted.");

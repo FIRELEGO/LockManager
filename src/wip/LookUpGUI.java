@@ -77,6 +77,9 @@ public class LookUpGUI extends GUI {
 		btnCheckInfo.setOnAction(e -> lookUp());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
+		
+		focus = txtSerial;
+		enterBtn = btnCheckInfo;
 	}
 
 	private void lookUp() {
@@ -101,6 +104,7 @@ public class LookUpGUI extends GUI {
 		if (lock == null) {
 			lblError.setText("Lock not found in database.");
 		} else {
+			Main.log("Looked up lock serial # " + lock.getSerial() + "by " + (modeSerial ? "serial." : "barcode."));
 			lblSerialT.setText("" + lock.getSerial());
 			lblBarcodeT.setText("" + lock.getBarcode());
 			lblComboT.setText(lock.getCombo());
@@ -121,6 +125,12 @@ public class LookUpGUI extends GUI {
 		lblYearUsedT.setText("-");
 		lblTotalUsesT.setText("-");
 		lblAssignedLockerT.setText("-");
+		
+		if(rbSerial.isSelected()) {
+			txtSerial.requestFocus();
+		} else {
+			txtBarcode.requestFocus();
+		}
 	}
 
 	private void setSerialMode() {
@@ -130,6 +140,8 @@ public class LookUpGUI extends GUI {
 		lblBarcodeT.setVisible(true);
 		txtSerial.setVisible(true);
 		lblSerialT.setVisible(false);
+		
+		txtSerial.requestFocus();
 	}
 
 	private void setBarcodeMode() {
@@ -139,5 +151,7 @@ public class LookUpGUI extends GUI {
 		lblSerialT.setVisible(true);
 		txtBarcode.setVisible(true);
 		lblBarcodeT.setVisible(false);
+		
+		txtBarcode.requestFocus();
 	}
 }

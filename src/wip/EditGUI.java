@@ -30,7 +30,7 @@ public class EditGUI extends GUI {
 	private Button btnBack = new MyButton("Back");
 
 	public EditGUI() {
-		super(500, 450, "Look Up Lock");
+		super(500, 450, "Edit Lock");
 
 		gpMain.add(lblSerial, 0, 0);
 		gpMain.add(txtSerial, 1, 0);
@@ -65,6 +65,8 @@ public class EditGUI extends GUI {
 		btnChangeInfo.setOnAction(e -> change());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
+		
+		enterBtn = btnChangeInfo;
 	}
 
 	private void lookUp() {
@@ -105,10 +107,12 @@ public class EditGUI extends GUI {
 		lblError.setText("");
 		lblSuccess.setText("");
 		try {
-			if(Main.searchBarcode(Integer.parseInt(txtBarcode.getText())) == null) {
-			Main.changeLock(lock, new Lock(Integer.parseInt(txtSerial.getText()), txtCombo.getText(), Integer.parseInt(txtBarcode.getText()), Integer.parseInt(txtYearAdded.getText()), Integer.parseInt(txtYearUsed.getText()), Integer.parseInt(txtTotalUses.getText()), lblAssignedLockerT.getText()));
-			lblSuccess.setText("Lock info chagned.");
-			clear();
+			if(Main.searchBarcode(Integer.parseInt(txtBarcode.getText())) == null || Main.searchBarcode(Integer.parseInt(txtBarcode.getText())).equals(lock)) {
+				Lock newLock = new Lock(Integer.parseInt(txtSerial.getText()), txtCombo.getText(), Integer.parseInt(txtBarcode.getText()), Integer.parseInt(txtYearAdded.getText()), Integer.parseInt(txtYearUsed.getText()), Integer.parseInt(txtTotalUses.getText()), lblAssignedLockerT.getText());
+				Main.log("Lock edited from " + lock + " to " + newLock + ".");
+				Main.changeLock(lock, newLock);
+				lblSuccess.setText("Lock info chagned.");
+				clear();
 			} else {
 				lblError.setText("Barcode already in use.");
 			}
@@ -136,6 +140,8 @@ public class EditGUI extends GUI {
 
 		btnCheckForExisting.setDisable(false);
 		btnChangeInfo.setDisable(true);
+		
+		txtSerial.requestFocus();
 	}
 
 }
