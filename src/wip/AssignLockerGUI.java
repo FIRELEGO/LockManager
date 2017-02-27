@@ -29,15 +29,22 @@ public class AssignLockerGUI extends GUI {
 	public AssignLockerGUI() {
 		super(500, 450, "Assign Locker");
 
+		// Label and text field for barcode
 		gpMain.add(lblBarcode, 0, 0);
 		gpMain.add(txtBarcode, 1, 0);
+		// Label and text field for locker number
 		gpMain.add(lblLockerNum, 0, 1);
 		gpMain.add(txtLockerNum, 1, 1);
+
+		// Button to increment locker number
 		gpMain.add(btnIncrement, 2, 1);
+		// Label and text field for total uses
 		gpMain.add(lblTotalUses, 0, 2);
 		gpMain.add(lblTotalUsesT, 1, 2);
+		// Label and text field for year lock was last used
 		gpMain.add(lblLastUsed, 0, 3);
 		gpMain.add(lblLastUsedT, 1, 3);
+		// Label and text field for year added
 		gpMain.add(lblYearAdded, 0, 4);
 		gpMain.add(lblYearAddedT, 1, 4);
 
@@ -49,21 +56,25 @@ public class AssignLockerGUI extends GUI {
 		btnAssign.setOnAction(e -> assign());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
-		
+
 		enterBtn = btnAssign;
 	}
 
+	// Increments locker number
 	private void increment() {
 		lblError.setText("");
 		try {
-			int lockerNum = Integer.parseInt(txtLockerNum.getText());
-
-			txtLockerNum.setText("" + ++lockerNum);
+			int lockerNum = Integer.parseInt(txtLockerNum.getText().substring(txtLockerNum.getText().indexOf("-") + 1));
+			int floor = Integer.parseInt(txtLockerNum.getText().substring(0, txtLockerNum.getText().indexOf("-")));
+			
+			++lockerNum;
+			txtLockerNum.setText(floor + "-" + (("" + lockerNum).length() >= 3 ? "" : (("" + lockerNum).length() == 2) ? "0" : "00") + lockerNum);
 		} catch (NumberFormatException e) {
-			lblError.setText("Check that current locker number is an integer.");
+			lblError.setText("Make sure locker number is in F-XXX form where F is the floor and XXX is the locker number.");
 		}
 	}
 
+	// Assigns lock to locker
 	private void assign() {
 		lblError.setText("");
 
@@ -72,8 +83,11 @@ public class AssignLockerGUI extends GUI {
 			String lockerNum = txtLockerNum.getText();
 			Lock lock = Main.searchBarcode(barcode);
 
-			if (lock != null) {
-			String[][] assignments = Main.checkAssignment(lockerNum, lock.getSerial());
+			if(lockerNum.length() != 5) {
+				lblError.setText("Make sure locker number is in F-XXX form where F is the floor and XXX is the locker number.");
+			} else if (lock != null) {
+				// Checks if lock is assigned to a locker already of if locker already has a lock
+				String[][] assignments = Main.checkAssignment(lockerNum, lock.getSerial());
 				boolean assign = true;
 				if(assignments[0][0] != null || assignments[1][0] != null) {
 					String message = "";
@@ -91,7 +105,8 @@ public class AssignLockerGUI extends GUI {
 							message += (message.isEmpty() ? "" : "\n") + "This lock is currently assigned to a locker number: " + assignments[1][0];
 						}
 					}
-					
+
+					// Allows user to continue with assignment and break any other assignments
 					Alert alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Lock Already Assigned");
 					alert.setHeaderText("WARNING!");
@@ -99,11 +114,13 @@ public class AssignLockerGUI extends GUI {
 
 					Optional<ButtonType> result = alert.showAndWait();
 					if (result.get() != ButtonType.OK){
-					    assign = false;
+						// Cancels lock assignment
+						assign = false;
 					}
 				}
 
 				if(assign) {
+					// Assigns the lock to locker
 					Main.log("Lock serial " + lock.getSerial() + " assiged to locker number " + lockerNum);
 					Main.assignLocker(lock.getSerial(), "" + lockerNum, Main.getCurYear(), lock.getTotalUses());
 
@@ -117,6 +134,7 @@ public class AssignLockerGUI extends GUI {
 					txtBarcode.setText("");
 				}
 			} else {
+				// Lock not found in DB
 				lblError.setText("Barcode not found.");
 			}
 		} catch (NumberFormatException e) {
@@ -124,9 +142,10 @@ public class AssignLockerGUI extends GUI {
 		}
 	}
 
+	// Clears the form
 	private void clear() {
 		txtBarcode.setText("");
-		
+
 		txtBarcode.requestFocus();
 	}
 }

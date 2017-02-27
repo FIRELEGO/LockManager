@@ -126,8 +126,8 @@ public class DBConnectionManager {
 			conn.prepareStatement("SELECT count(*) FROM suncoast.reports;");
 			psGetReports = conn.prepareStatement("SELECT * FROM suncoast.reports;");
 			psGetReportsForLock = conn.prepareStatement("SELECT * FROM suncoast.reports WHERE LockSerial = ?;");
-			psAddReport = conn.prepareStatement("INSERT INTO suncoast.reports (ReportID, LockSerial, Priority, Progress, Date) VALUES (?, ?, ?, ?, ?);");
-			psGetUser = conn.prepareStatement("SELECT * FROM suncoast.account_copy WHERE Username=?;");
+			psAddReport = conn.prepareStatement("INSERT INTO suncoast.reports (LockSerial, Priority, Progress, Report) VALUES (?, ?, ?, ?);");
+			psGetUser = conn.prepareStatement("SELECT * FROM suncoast.account WHERE Username=?;");
 			psLog = conn.prepareStatement("INSERT INTO suncoast.log (Username, Info) VALUES (?, ?);");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -405,21 +405,38 @@ public class DBConnectionManager {
 		return ret;
 	}
 
-	public String[][] getLockers(String res) {
+	public String[][] getLockers(int floorStart, int floorEnd, int lockerStart, int lockerEnd) {
 
 		ArrayList<String[]> lockers = new ArrayList<String[]>();
 
 		try {
 			Statement stmt = conn.createStatement();
 
-			ResultSet rs = stmt.executeQuery("SELECT * FROM suncoast.lockerassignment" + (!res.equals("") ? " WHERE" + res : ""));
+			ResultSet rs = stmt.executeQuery("SELECT * FROM suncoast.lockerassignment");
 			while(rs.next()) {
 				lockers.add(new String[]{rs.getString(1), "" + rs.getInt(2)});
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		for(int i = lockers.size() - 1; i >= 0; i--) {
+			int lockerNum = Integer.parseInt(lockers.get(i)[0].substring(lockers.get(i)[0].indexOf("-") + 1));
+			int floor = Integer.parseInt(lockers.get(i)[0].substring(0, lockers.get(i)[0].indexOf("-")));
+			
 
+			if(floorStart != -1) {
+				if(floor < floorStart || floor > floorEnd) {
+					lockers.remove(i);
+				}
+			}
+			if(lockerStart != -1) {
+				if(lockerNum < lockerStart || lockerNum > lockerEnd) {
+					lockers.remove(i);
+				}
+			}
+		}
+		
 		String[][] ret = new String[lockers.size()][2];
 
 		for(int k = 0; k < ret.length; k++) {
@@ -431,12 +448,12 @@ public class DBConnectionManager {
 	}
 
 
-	public void addReport(int lockSerial, String priority, String progress, String date) {
+	public void addReport(int lockSerial, String priority, String progress, String report) {
 		try {
 			psAddReport.setInt(1, lockSerial);
 			psAddReport.setString(2, priority);
 			psAddReport.setString(3, progress);
-			psAddReport.setString(4, date);
+			psAddReport.setString(4, report);
 
 			psAddReport.execute();
 		} catch (SQLException e) {
@@ -490,7 +507,7 @@ public class DBConnectionManager {
 			ResultSet rs = psGetUser.executeQuery();
 
 			while(rs.next()) {
-				ret = new Account(rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8), rs.getBoolean(9), rs.getInt(16));
+				ret = new Account(rs.getString(5), rs.getString(6), rs.getString(16), rs.getBoolean(7), rs.getBoolean(8), rs.getInt(15));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

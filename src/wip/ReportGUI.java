@@ -1,9 +1,5 @@
 package wip;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -58,18 +54,18 @@ public class ReportGUI extends GUI {
 	}
 
 	private void updateLength()	{
-		lblLength.setText("Characters: " + (txtComplaint.getLength() + 1) + "/200");
+		lblLength.setText("Characters: " + (txtComplaint.getLength() + 1) + "/500");
 	}
 
+	// Submits the forms
 	private void submit() {
 		lblError.setText("");
 		lblSuccess.setText("");
 
-		if(txtComplaint.getLength() > 200) {
-			lblError.setText("Complaint is over 200 characaters.");
+		if(txtComplaint.getLength() > 500) {
+			lblError.setText("Complaint is over 500 characaters.");
 		} else {
 			try {
-				System.out.println("|" + txtSerial.getText() + "|");
 				int serial = Integer.parseInt(txtSerial.getText());
 
 				if(cbPriority.getSelectionModel().getSelectedItem() == null) {
@@ -79,9 +75,7 @@ public class ReportGUI extends GUI {
 				} else if(txtComplaint.getText().equals("")) {
 					lblError.setText("Enter a complaint.");
 				} else {
-					DateFormat dateFormat = new SimpleDateFormat("MM-dd-YY");
-					Date date = new Date();
-					Main.addReport(serial, cbPriority.getSelectionModel().getSelectedItem(), "SUBMITED", dateFormat.format(date));
+					Main.addReport(serial, cbPriority.getSelectionModel().getSelectedItem(), "SUBMITED", txtComplaint.getText());
 					Main.log("Report filed.");
 					
 					clear();
@@ -93,6 +87,7 @@ public class ReportGUI extends GUI {
 		}
 	}
 
+	// Clears the form
 	private void clear() {
 		txtSerial.setText("");
 		cbPriority.getSelectionModel().clearSelection();

@@ -55,7 +55,7 @@ public class GenerateGUI extends GUI {
 	private TextField txtFloorStart = new MyTextField(60);
 	private Label lblFloorEnd = new Label(" End: ");
 	private TextField txtFloorEnd = new MyTextField(60);
-	
+
 	private Button btnCheckRestrictions = new MyButton("Check Restriction");
 	private TextField txtPath = new TextField();
 	private Button btnChoose = new MyButton("Choose Other Path");
@@ -63,12 +63,12 @@ public class GenerateGUI extends GUI {
 	private Button btnCreate = new MyButton("Create PDF");
 	private Button btnClear = new MyButton("Clear");
 	private Button btnBack = new MyButton("Back");
-	
+
 	public GenerateGUI() {
 		super(500, 600, "Generate Data Sheet");
 
 		gpMain.add(new Label("Report type:"), 0, 0, 2, 1);
-		
+
 		rbLock.setToggleGroup(tgReportType);
 		rbLock.setSelected(true);
 		rbLocker.setToggleGroup(tgReportType);
@@ -76,7 +76,7 @@ public class GenerateGUI extends GUI {
 		gpMain.add(rbLock, 0, 1, 2, 1);
 		gpMain.add(new Label("    "), 0, 2);
 		gpMain.add(new Label("Restrictions"), 1, 2);
-		
+
 		// Add cb and toggle function for year added
 		gpMain.add(cbYearAdded, 1, 3);
 		cbYearAdded.setOnAction(new EventHandler<ActionEvent>() {
@@ -93,7 +93,7 @@ public class GenerateGUI extends GUI {
 				}
 			}
 		});
-		
+
 		// Add cb and toggle function for year last used
 		gpMain.add(cbYearLastUsed, 1, 4);
 		cbYearLastUsed.setOnAction(new EventHandler<ActionEvent>() {
@@ -239,20 +239,20 @@ public class GenerateGUI extends GUI {
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-YYYY");
 		Date date = new Date();
 		btnChoose.setOnAction(e -> txtPath.setText(SetUp.openFC(new File(System.getProperty("user.dir")), (rbLock.isSelected() ? "Lock Report " : "Locker Report ") + dateFormat.format(date))));
-		
+
 		rbLock.setOnAction(e -> enableLockOptions());
 		rbLocker.setOnAction(e -> enableLockerOptions());
-		
-		
+
+
 		gpButtons.add(btnCreate, 0, 0);
 		gpButtons.add(btnClear, 1, 0);
 		gpButtons.add(btnBack, 2, 0);
 		btnCreate.setDisable(true);
-		
+
 		btnCreate.setOnAction(e -> create());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
-		
+
 		enterBtn = btnCreate;
 	}
 
@@ -260,22 +260,22 @@ public class GenerateGUI extends GUI {
 		if(rbLock.isSelected()) {
 			boolean[] reses = {false, false, false};
 			String res = "";
-			
-				reses[0] = cbYearAdded.isSelected();
-				reses[1] = cbYearLastUsed.isSelected();
-				reses[2] = cbTotalUses.isSelected();
-			
+
+			reses[0] = cbYearAdded.isSelected();
+			reses[1] = cbYearLastUsed.isSelected();
+			reses[2] = cbTotalUses.isSelected();
+
 			if(reses[0]) {
 				res += " YearAdded >= " + txtYearAddedStart.getText() + " AND YearAdded <= " + txtYearAddedEnd.getText();
 			}
-			
+
 			if(reses[1]) {
 				if(reses[0]) {
 					res += " && ";
 				}
 				res += " YearLastUsed >= " + txtYearLastUsedStart.getText() + " AND YearLastUsed <= " + txtYearLastUsedEnd.getText();
 			}
-			
+
 
 			if(reses[2]) {
 				if(reses[1] || reses[0]) {
@@ -283,39 +283,47 @@ public class GenerateGUI extends GUI {
 				}
 				res += " TotalUses >= " + txtTotalUsesStart.getText() + " AND TotalUses <= " + txtTotalUsesEnd.getText();
 			}
-			
+
 			Lock[] data = Main.getLocks(res);
 
 			DateFormat dateFormat = new SimpleDateFormat("MM-dd-YYYY");
 			Date date = new Date();
 			Main.log("Data sheet generated");
 			Pdf.createLockPDF(txtPath.getText(), dateFormat.format(date), res, data);
-		} else { // TODO figure our locker num and floor system
+		} else {
 			boolean[] reses = {false, false};
 			String res = "";
-			
-				reses[0] = cbLockerNum.isSelected();
-				reses[1] = cbFloor.isSelected();
-			
+			int floorStart = -1;
+			int floorEnd = -1;
+			int lockerStart = -1;
+			int lockerEnd = -1;
+
+			reses[0] = cbLockerNum.isSelected();
+			reses[1] = cbFloor.isSelected();
+
 			if(reses[0]) {
+				lockerStart = Integer.parseInt(txtLockerNumStart.getText());
+				lockerEnd = Integer.parseInt(txtLockerNumEnd.getText());
 				res += " LockerNum >= " + txtLockerNumStart.getText() + " AND LockerNum <= " + txtLockerNumEnd.getText();
 			}
-			
+
 			if(reses[1]) {
 				if(reses[0]) {
 					res += " && ";
 				}
-				res += " FLoor >= " + txtFloorStart.getText() + " AND FLoor <= " + txtFloorEnd.getText();
+				floorStart = Integer.parseInt(txtFloorStart.getText());
+				floorEnd = Integer.parseInt(txtFloorEnd.getText());
+				res += " Floor >= " + txtFloorStart.getText() + " AND Floor <= " + txtFloorEnd.getText();
 			}
-			
-			String[][] data = Main.getLocker(res);
+
+			String[][] data = Main.getLockers(floorStart, floorEnd, lockerStart, lockerEnd);
 
 			DateFormat dateFormat = new SimpleDateFormat("MM-dd-YYYY");
 			Date date = new Date();
 			Pdf.createLockerPDF(txtPath.getText(), dateFormat.format(date), res, data);
 		}
 	}
-	
+
 	private void enableLockOptions() {
 		// Disable and hide floor options
 		cbFloor.setSelected(false);
@@ -325,7 +333,7 @@ public class GenerateGUI extends GUI {
 		txtFloorStart.setVisible(false);
 		lblFloorEnd.setVisible(false);
 		txtFloorEnd.setVisible(false);
-		
+
 		// Disable and hide locker number options
 		cbLockerNum.setSelected(false);
 		cbLockerNum.setDisable(true);
@@ -381,7 +389,7 @@ public class GenerateGUI extends GUI {
 		gpLockRestrictions.setVisible(false);
 		gpLockerRestrictions.setVisible(true);
 	}
-	
+
 	private void clear() {
 		txtFloorEnd.setText("");
 		txtFloorStart.setText("");
@@ -396,45 +404,49 @@ public class GenerateGUI extends GUI {
 		rbLocker.fire();
 		rbLock.fire();
 	}
-	
+
 	private void checkRestrictions() {
 		lblError.setText("");
 		boolean cont = true;
-		
-		if(cbYearAdded.isSelected() && Integer.parseInt(txtYearAddedStart.getText()) > Integer.parseInt(txtYearAddedEnd.getText())) {
-			cont = false;
-			lblError.setText("Year added restricions inproper. Start must be less than end.");
-		}
 
-		if(cbYearLastUsed.isSelected() && Integer.parseInt(txtYearLastUsedStart.getText()) > Integer.parseInt(txtYearLastUsedEnd.getText())) {
-			cont = false;
-			lblError.setText("Year last used restricions inproper. Start must be less than end.");
-		}
+		try {
+			if(cbYearAdded.isSelected() && Integer.parseInt(txtYearAddedStart.getText()) > Integer.parseInt(txtYearAddedEnd.getText())) {
+				cont = false;
+				lblError.setText("Year added restricions inproper. Start must be less than end.");
+			}
 
-		if(cbTotalUses.isSelected() && Integer.parseInt(txtTotalUsesStart.getText()) > Integer.parseInt(txtTotalUsesEnd.getText())) {
-			cont = false;
-			lblError.setText("Total uses restricions inproper. Start must be less than end.");
-		}
+			if(cbYearLastUsed.isSelected() && Integer.parseInt(txtYearLastUsedStart.getText()) > Integer.parseInt(txtYearLastUsedEnd.getText())) {
+				cont = false;
+				lblError.setText("Year last used restricions inproper. Start must be less than end.");
+			}
 
-		if(cbLockerNum.isSelected() && Integer.parseInt(txtLockerNumStart.getText()) > Integer.parseInt(txtLockerNumEnd.getText())) {
-			cont = false;
-			lblError.setText("Locker number restricions inproper. Start must be less than end.");
-		}
-		
-		if(cbFloor.isSelected() && Integer.parseInt(txtFloorStart.getText()) > Integer.parseInt(txtFloorEnd.getText())) {
-			cont = false;
-			lblError.setText("Floor restricions inproper. Start must be less than end.");
-		}
-		
-		if(cont) {
-			btnCreate.setDisable(false);
-			btnChoose.setDisable(false);
-			txtPath.setDisable(false);
-			DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh;mm,ss");
-			Date date = new Date();
-			txtPath.setText(new File(System.getProperty("user.home") + "\\Desktop\\Report " + dateFormat.format(date)).getAbsolutePath() + ".pdf");
-		} else {
-			btnCreate.setDisable(true);
+			if(cbTotalUses.isSelected() && Integer.parseInt(txtTotalUsesStart.getText()) > Integer.parseInt(txtTotalUsesEnd.getText())) {
+				cont = false;
+				lblError.setText("Total uses restricions inproper. Start must be less than end.");
+			}
+
+			if(cbLockerNum.isSelected() && Integer.parseInt(txtLockerNumStart.getText()) > Integer.parseInt(txtLockerNumEnd.getText())) {
+				cont = false;
+				lblError.setText("Locker number restricions inproper. Start must be less than end.");
+			}
+
+			if(cbFloor.isSelected() && Integer.parseInt(txtFloorStart.getText()) > Integer.parseInt(txtFloorEnd.getText())) {
+				cont = false;
+				lblError.setText("Floor restricions inproper. Start must be less than end.");
+			}
+
+			if(cont) {
+				btnCreate.setDisable(false);
+				btnChoose.setDisable(false);
+				txtPath.setDisable(false);
+				DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh;mm,ss");
+				Date date = new Date();
+				txtPath.setText(new File(System.getProperty("user.home") + "\\Desktop\\Report " + dateFormat.format(date)).getAbsolutePath() + ".pdf");
+			} else {
+				btnCreate.setDisable(true);
+			}
+		} catch (NumberFormatException e) {
+			lblError.setText("Ensure all data ranges are set.");
 		}
 	}
 }

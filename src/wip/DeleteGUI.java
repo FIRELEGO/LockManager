@@ -37,21 +37,29 @@ public class DeleteGUI extends GUI {
 	public DeleteGUI() {
 		super(500, 450, "Delete Lock");
 
+		// Label and text field for serial
 		gpMain.add(lblSerial, 0, 0);
 		gpMain.add(txtSerial, 1, 0);
+		// Button to check if lock exist before continuing with form
 		gpMain.add(btnCheckForExisting, 0, 1, 2, 1);
 		GridPane.setHalignment(btnCheckForExisting, HPos.CENTER);
 		btnCheckForExisting.setOnAction(e -> lookUp());
+		// Label and text field for serial
 		gpMain.add(lblBarcode, 0, 2);
 		gpMain.add(lblBarcodeT, 1, 2);
+		// Label and text field for combo
 		gpMain.add(lblCombo, 0, 3);
 		gpMain.add(lblComboT, 1, 3);
+		// Label and text field for year added
 		gpMain.add(lblYearAdded, 0, 4);
 		gpMain.add(lblYearAddedT, 1, 4);
+		// Label and text field for year used
 		gpMain.add(lblYearUsed, 0, 5);
 		gpMain.add(lblYearUsedT, 1, 5);
+		// Label and text field for total uses
 		gpMain.add(lblTotalUses, 0, 6);
 		gpMain.add(lblTotalUsesT, 1, 6);
+		// Label and text field for assigned locker
 		gpMain.add(lblAssignedLocker, 0, 7);
 		gpMain.add(lblAssignedLockerT, 1, 7);
 
@@ -68,6 +76,7 @@ public class DeleteGUI extends GUI {
 		enterBtn = btnDelete;
 	}
 
+	// Looks up lock
 	private void lookUp() {
 		lblError.setText("");
 
@@ -95,7 +104,7 @@ public class DeleteGUI extends GUI {
 		}
 	}
 
-
+	// Clears the form
 	private void clear() {
 		lblBarcodeT.setText("-");
 		lblBarcodeT.setText("-");
@@ -112,12 +121,14 @@ public class DeleteGUI extends GUI {
 		txtSerial.requestFocus();
 	}
 
+	// Deletes lock from DB
 	private void delete() {
 		boolean delete = true;
 		boolean locker = false;
 		boolean report = false;
 
 		if(!lock.getAssignedLocker().equals("-")) {
+			// If the lock is currently assigned to locker
 			locker = true;
 
 			Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -133,6 +144,7 @@ public class DeleteGUI extends GUI {
 		
 		int numOfReports = Main.getReportsForLock(lock.getSerial()).size();
 		if(numOfReports > 0) {
+			// If lock has reports on it
 			report = true;
 
 			Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -147,6 +159,7 @@ public class DeleteGUI extends GUI {
 		}
 
 		if(delete) {
+			// Deletes the lock
 			if(locker) {
 				Main.clearAssignment(lock.getSerial());
 			}

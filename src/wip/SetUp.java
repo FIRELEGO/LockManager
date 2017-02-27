@@ -1,6 +1,3 @@
-/* Nicholas Signori
- * Bank
- */
 package wip;
 
 import java.io.File;
@@ -23,8 +20,10 @@ public class SetUp extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		SetUp.stage = stage;
+		// Sets icon
 		stage.getIcons().add(new Image("file:res/lock.png"));
 		
+		// Sets close action
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 		    @Override public void handle(WindowEvent t) {
 		        Main.exit();
@@ -34,6 +33,7 @@ public class SetUp extends Application {
 		setScene(new LoginGUI());
 	}
 
+	// Changes stage to new scene
 	public static void setScene(GUI scene) {
 		stage.setScene(scene.getScene());
 		stage.setTitle(scene.getName());
@@ -46,6 +46,7 @@ public class SetUp extends Application {
 		}
 	}
 
+	// File chooser for reports
 	public static String openFC(File directory, String name) {
 		String ret = "";
 

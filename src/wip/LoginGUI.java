@@ -17,8 +17,10 @@ public class LoginGUI extends GUI {
 	public LoginGUI() {
 		super(500, 450, "Login");
 
+		// Label and text field for username
 		gpMain.add(lblUsername, 0, 0);
 		gpMain.add(txtUsername, 1, 0);
+		// Label and text field for password
 		gpMain.add(lblPassword, 0, 1);
 		gpMain.add(txtPassword, 1, 1);
 		
@@ -31,6 +33,7 @@ public class LoginGUI extends GUI {
 		enterBtn = btnSignin;
 	}
 	
+	// Signs user in
 	private void signIn() {
 			Account user = Main.getUser(txtUsername.getText());
 			String pass = txtPassword.getText();
@@ -47,8 +50,10 @@ public class LoginGUI extends GUI {
 			} else if (!user.isApproved()) {
 				lblError.setText("User is not approved.");
 			} else {
+				// Gets the specific salt for the user
 				String salt = user.getSalt();
 				
+				// Salts and hashes user input password then checks against salted and hashed password from DB
 				if(Main.hash(pass + salt).equals(user.getPassword())) {
 					Main.user = user;
 					Main.log("Login");

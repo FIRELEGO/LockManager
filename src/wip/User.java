@@ -1,6 +1,3 @@
-/* Nicholas Signori
- * Bank
- */
 package wip;
 
 import java.util.ArrayList;

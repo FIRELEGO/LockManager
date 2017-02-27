@@ -4,6 +4,8 @@ public class Account {
 	private String username;
 	private String password;
 	private String salt;
+	
+	// Approval and privilege are set by accompanying app
 	private boolean awaitingAproval;
 	private boolean approved;
 	private int priviledge;

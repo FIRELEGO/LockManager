@@ -3,7 +3,7 @@
  * Start: 9/17/16
  */
 package wip;
-
+	
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -29,34 +28,31 @@ import javafx.scene.control.ButtonType;
  * fix data sheet generation (Check that user entered data into restrictions)
  * figure out locker floor system
  * assign locker problem
+ * What user can do based on role
+ * Add purpose of GUI comments to each GUI class
  */
 
 public class Main {
 	// TODO remove from final
 	public static boolean homeDB = true;
+	// Object of the user who is logged in
 	public static Account user;
 
-	public static final String VERSION = "0.7.0";
+	public static final String VERSION = "0.9.0";
 
 	private static DBConnectionManager db;
 
 	public static void main(String[] args) {
-
-
-
 		// TODO remove from final
+		// Determines whether I am at home or school and sets DB URL accordingly
 		String hostname = "Unknown";
-
-		try
-		{
+		try	{
 			InetAddress addr;
 			addr = InetAddress.getLocalHost();
 			hostname = addr.getHostName();
 			homeDB = !hostname.substring(0, 4).equals("0151");
 			System.out.println((homeDB ? "Home" : "School") + " DB used");
-		}
-		catch (UnknownHostException ex)
-		{
+		} catch (UnknownHostException ex) {
 			System.out.println("Hostname can not be resolved");
 		}
 
@@ -172,6 +168,7 @@ public class Main {
 	public static void exit() {
 		//		save(); TODO
 
+		// Don't log an exit if no one logged in
 		if(user != null) {
 			Main.log("Logged off.");
 		}
@@ -180,6 +177,7 @@ public class Main {
 
 	// Removes locks which haven't been used in over 10 years
 	public static void purgeLocks() {
+		// Confirmation that user wants to purge
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Purge Locks");
 		alert.setHeaderText("Purge old locks from database?");
@@ -188,6 +186,7 @@ public class Main {
 		alert.showAndWait();
 
 		if(alert.getResult() == ButtonType.OK) {
+			// User says ok
 			Main.log("All locks lasted used before " + (getCurYear() - 10) + " have been purged.");
 			db.purgeLocks(getCurYear());
 
@@ -197,6 +196,7 @@ public class Main {
 
 			alertDone.showAndWait();
 		} else {
+			// User says cancel
 			Alert alertCanceled = new Alert(AlertType.INFORMATION);
 			alertCanceled.setTitle("Purge Locks");
 			alertCanceled.setHeaderText("Purge canceled.");
@@ -207,6 +207,7 @@ public class Main {
 
 	// Deletes all locker assignments
 	public static void releaseAllLockers() {
+		// Confirmation that user wants to release all lockers
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Release All Locks");
 		alert.setHeaderText("Release all lockers into circulation.");
@@ -215,6 +216,7 @@ public class Main {
 		alert.showAndWait();
 
 		if(alert.getResult() == ButtonType.OK) {
+			// User says ok
 			Main.log("All lockers released to circulation.");
 			db.releaseLockers();
 
@@ -224,6 +226,7 @@ public class Main {
 
 			alertDone.showAndWait();
 		} else {
+			// User says cancel
 			Alert alertCanceled = new Alert(AlertType.INFORMATION);
 			alertCanceled.setTitle("Release Lockers");
 			alertCanceled.setHeaderText("Locker release canceled.");
@@ -255,8 +258,8 @@ public class Main {
 	}
 
 	// Gets all of the lockers given certain SQL restrictions
-	public static String[][] getLocker(String res) {
-		return db.getLockers(res);
+	public static String[][] getLockers(int floorStart, int floorEnd, int lockerStart, int lockerEnd) {
+		return db.getLockers(floorStart, floorEnd, lockerStart, lockerEnd);
 	}
 
 	// Clears all reports made for a certain lock
@@ -265,8 +268,8 @@ public class Main {
 	}
 
 	// Adds a report to the DB
-	public static void addReport(int lockSerial, String priority, String progress, String date) {
-		db.addReport(lockSerial, priority, progress, date);
+	public static void addReport(int lockSerial, String priority, String progress, String report) {
+		db.addReport(lockSerial, priority, progress, report);
 	}
 
 	// Gets reports from DB

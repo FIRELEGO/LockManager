@@ -32,21 +32,29 @@ public class EditGUI extends GUI {
 	public EditGUI() {
 		super(500, 450, "Edit Lock");
 
+		// Label and text field for serial
 		gpMain.add(lblSerial, 0, 0);
 		gpMain.add(txtSerial, 1, 0);
+		// Button to check if lock exist before continuing with form
 		gpMain.add(btnCheckForExisting, 0, 1, 2, 1);
 		GridPane.setHalignment(btnCheckForExisting, HPos.CENTER);
 		btnCheckForExisting.setOnAction(e -> lookUp());
+		// Label and text field for barcode
 		gpMain.add(lblBarcode, 0, 2);
 		gpMain.add(txtBarcode, 1, 2);
+		// Label and text field for combo
 		gpMain.add(lblCombo, 0, 3);
 		gpMain.add(txtCombo, 1, 3);
+		// Label and text field for year added
 		gpMain.add(lblYearAdded, 0, 4);
 		gpMain.add(txtYearAdded, 1, 4);
+		// Label and text field for year last used
 		gpMain.add(lblYearUsed, 0, 5);
 		gpMain.add(txtYearUsed, 1, 5);
+		// Label and text field for total uses
 		gpMain.add(lblTotalUses, 0, 6);
 		gpMain.add(txtTotalUses, 1, 6);
+		// Label and text field for locker assignment
 		gpMain.add(lblAssignedLocker, 0, 7);
 		gpMain.add(lblAssignedLockerT, 1, 7);
 
@@ -69,6 +77,7 @@ public class EditGUI extends GUI {
 		enterBtn = btnChangeInfo;
 	}
 
+	// Looks up lock
 	private void lookUp() {
 		lblError.setText("");
 
@@ -79,6 +88,7 @@ public class EditGUI extends GUI {
 			lblError.setText("Check that serial is an integer.");
 		}
 
+		// Checks that lock exists
 		if (lock == null) {
 			lblError.setText("Lock not found in database.");
 		} else {
@@ -103,6 +113,7 @@ public class EditGUI extends GUI {
 		}
 	}
 
+	// Changes locks data in DB
 	private void change() {
 		lblError.setText("");
 		lblSuccess.setText("");
@@ -121,6 +132,7 @@ public class EditGUI extends GUI {
 		}
 	}
 
+	// Clears data from form
 	private void clear() {
 		txtSerial.setText("");
 		txtBarcode.setText("");

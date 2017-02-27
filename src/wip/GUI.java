@@ -1,6 +1,3 @@
-/* Nicholas Signori
- * Bank
- */
 package wip;
 
 import javafx.event.EventHandler;
@@ -79,6 +76,7 @@ public abstract class GUI {
 		gpRoot.add(lblError, 0, 4);
 	}
 
+	// Builds and returns scene
 	public Scene getScene() {
 		Scene scene = new Scene(gpRoot, width, height);
 		if(enterBtn != null) {
@@ -99,6 +97,7 @@ public abstract class GUI {
 		return name;
 	}
 
+	// Gets the dimension of the screen
 	public int[] getDim() {
 		return new int[] { width, height };
 	}

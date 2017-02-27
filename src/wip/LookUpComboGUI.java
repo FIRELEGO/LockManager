@@ -18,9 +18,11 @@ public class LookUpComboGUI extends GUI {
 	public LookUpComboGUI() {
 		super(560, 600, "Look Up by Combo");
 
+		// Label and text field for combo
 		gpMain.add(lblCombo, 0, 0);
 		gpMain.add(txtCombo, 1, 0);
 
+		// Sets up all the columns of the table
 		TableColumn<Lock, Integer> tcSerial = new TableColumn<Lock, Integer>("Serial");
 		TableColumn<Lock, String> tcCombo = new TableColumn<Lock, String>("Combo");
 		TableColumn<Lock, Integer> tcBarcode = new TableColumn<Lock, Integer>("Barcode");
@@ -29,6 +31,7 @@ public class LookUpComboGUI extends GUI {
 		TableColumn<Lock, Integer> tcTotalUses = new TableColumn<Lock, Integer>("Total Uses");
 		TableColumn<Lock, String> tcAssignedLocker = new TableColumn<Lock, String>("Assigned Lock");
 
+		// Sets up column values
 		tcSerial.setCellValueFactory(new PropertyValueFactory<Lock, Integer>("serial"));
 		tcCombo.setCellValueFactory(new PropertyValueFactory<Lock, String>("combo"));
 		tcBarcode.setCellValueFactory(new PropertyValueFactory<Lock, Integer>("barcode"));
@@ -59,6 +62,7 @@ public class LookUpComboGUI extends GUI {
 
 		String combo = txtCombo.getText();
 		
+		// Looks up all locks with provided combo
 		try {
 			if(combo.length() != 8) {
 				lblError.setText("Make sure combo is in xx-xx-xx form.");
@@ -68,7 +72,7 @@ public class LookUpComboGUI extends GUI {
 					Integer.parseInt(temp);
 				}
 				Main.log("Looked up all with the combo " + combo);
-				tvLocks.setItems(Main.searchCombo(combo, true)); // TODO allow conversion from old to new and recofigure for obseravable list. (No reseting the items every time, just mod the list)
+				tvLocks.setItems(Main.searchCombo(combo, true)); // TODO allow conversion from old to new and reconfigure for observable list. (No reseting the items every time, just mod the list)
 			}
 		} catch (NumberFormatException e) {
 			lblError.setText("Make sure the combo is in xx-xx-xx!");

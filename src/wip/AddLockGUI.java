@@ -26,17 +26,22 @@ public class AddLockGUI extends GUI {
 	public AddLockGUI() {
 		super(500, 450, "Add Lock");
 
+		// Label and text field for serial
 		gpMain.add(lblSerial, 0, 0);
 		gpMain.add(txtSerial, 1, 0);
+		// Button to check if lock exist before continuing with form
 		gpMain.add(btnCheckForExisting, 0, 1, 2, 1);
 		GridPane.setHalignment(btnCheckForExisting, HPos.CENTER);
 		btnCheckForExisting.setOnAction(e -> checkButton());
+		// Label and text field for combo
 		gpMain.add(lblCombo, 0, 2);
 		gpMain.add(txtCombo, 1, 2);
 		txtCombo.setDisable(true);
+		// Label and text field for barcode
 		gpMain.add(lblBarcode, 0, 3);
 		gpMain.add(txtBarcode, 1, 3);
 		txtBarcode.setDisable(true);
+		// Label and text field for year added
 		gpMain.add(lblYearAdded, 0, 4);
 		gpMain.add(lblYearAddedT, 1, 4);
 
@@ -53,6 +58,7 @@ public class AddLockGUI extends GUI {
 		enterBtn = btnAdd;
 	}
 
+	// Determines purpose of button and handles action
 	private void checkButton() {
 		if (btnCheckForExisting.getText().equals("Check for Existing")) {
 			lookUp();
@@ -61,6 +67,7 @@ public class AddLockGUI extends GUI {
 		}
 	}
 
+	// Adds the lock to the DB
 	private void add() {
 		lblError.setText("");
 
@@ -77,8 +84,10 @@ public class AddLockGUI extends GUI {
 			} else if (Main.searchBarcode(barcode) != null) {
 				lblError.setText("Barcode already in use.");
 			} else {
+				// Splits combo from xx-xx-xx to array then makes sure they're all numbers
 				String[] comboNums = combo.split("-");
 				for(String temp : comboNums) {
+					// TODO check all nums are < 40
 					Integer.parseInt(temp);
 				}
 
@@ -99,6 +108,7 @@ public class AddLockGUI extends GUI {
 		}
 	}
 
+	// Locks up lock in old and new DB
 	private void lookUp() {
 		String sSerial = txtSerial.getText();
 		clear();
@@ -113,17 +123,20 @@ public class AddLockGUI extends GUI {
 				txtCombo.setText(lock.getCombo());
 
 				if(lock.getBarcode() == -1) {
+					// If the lock does not have a barcode then it is from the old DB and needs to be imported
 					txtBarcode.setDisable(false);
 					lock.setYearAdded(Main.getCurYear());
 					lblYearAddedT.setText("" + lock.getYearAdded());
 					btnAdd.setDisable(false);
 					lblSuccess.setText("Lock found in old DB. Enter remaining info.");
 				} else {
+					// Lock is already in DB
 					txtBarcode.setText("" + lock.getBarcode());
 					lblYearAddedT.setText("" + lock.getYearAdded());
 					lblError.setText("Lock already in DB.");
 				}
 			} else {
+				// Lock was not found in any DB
 				txtBarcode.setDisable(false);
 				txtCombo.setDisable(false);
 				lblYearAddedT.setText("" + Main.getCurYear());
@@ -138,6 +151,7 @@ public class AddLockGUI extends GUI {
 		}
 	}
 
+	// Clears form
 	private void clear() {
 		txtSerial.setText("");
 		txtSerial.setDisable(false);
@@ -152,6 +166,7 @@ public class AddLockGUI extends GUI {
 		txtSerial.requestFocus();
 	}
 
+	// Allows user to check a new serial
 	private void newSerial() {
 		txtSerial.setText("");
 		txtSerial.setDisable(false);

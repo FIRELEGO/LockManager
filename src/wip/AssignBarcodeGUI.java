@@ -33,20 +33,27 @@ public class AssignBarcodeGUI extends GUI {
 	public AssignBarcodeGUI() {
 		super(500, 450, "Assign Barcode");
 
+		// Label and text field for serial
 		gpMain.add(lblSerial, 0, 0);
 		gpMain.add(txtSerial, 1, 0);
+		// Button to check if lock exist before continuing with form
 		gpMain.add(btnCheckForExisting, 0, 1, 2, 1);
 		GridPane.setHalignment(btnCheckForExisting, HPos.CENTER);
 		btnCheckForExisting.setOnAction(e -> lookUp());
+		// Label and text field for barcode
 		gpMain.add(lblBarcode, 0, 2);
 		gpMain.add(txtBarcode, 1, 2);
 		txtBarcode.setDisable(true);
+		// Label and text field for combo
 		gpMain.add(lblCombo, 0, 3);
 		gpMain.add(lblComboT, 1, 3);
+		// Label and text field for year added
 		gpMain.add(lblYearAdded, 0, 4);
 		gpMain.add(lblYearAddedT, 1, 4);
+		// Label and text field for year last added
 		gpMain.add(lblYearLastUsed, 0, 5);
 		gpMain.add(lblYearLastUsedT, 1, 5);
+		// Label and text field for total uses
 		gpMain.add(lblTotalUses, 0, 6);
 		gpMain.add(lblTotalUsesT, 1, 6);
 
@@ -63,6 +70,7 @@ public class AssignBarcodeGUI extends GUI {
 		enterBtn = btnAssign;
 	}
 
+	// Assigns barcode to lock
 	private void assign() {
 		lblError.setText("");
 
@@ -71,8 +79,10 @@ public class AssignBarcodeGUI extends GUI {
 			int barcode = Integer.parseInt(txtBarcode.getText());
 
 			if (Main.searchBarcode(barcode) == null) {
+				// If barcode is not in use
 				boolean assign = true;
 				if(Main.searchSerial(serial, false).getBarcode() != -1 && Main.searchSerial(serial, false).getBarcode() != barcode) {
+					// If lock already has barcode and it's not the one user is trying to assign.
 					Alert alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Lock already assigned to barcode");
 					alert.setHeaderText("WARNING!");
@@ -85,6 +95,7 @@ public class AssignBarcodeGUI extends GUI {
 				}
 
 				if(assign) {
+					// Assigns barcode
 					Main.log("Barcode " + barcode + " assiged to lock serial " + serial);
 					Main.editBarcode(serial, barcode);
 
@@ -105,6 +116,7 @@ public class AssignBarcodeGUI extends GUI {
 		}
 	}
 
+	// Looks up lock by serial
 	private void lookUp() {
 		lblError.setText("");
 		try {
@@ -128,6 +140,7 @@ public class AssignBarcodeGUI extends GUI {
 		}
 	}
 
+	// Clears the form
 	private void clear() {
 		txtSerial.setText("");
 		txtBarcode.setText("");
