@@ -1,7 +1,7 @@
 package arduinoControl;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -38,19 +38,18 @@ public class Test {
 			System.out.println("Port failed to open");
 			System.exit(1);
 		}
-		scan.close();
 
-		port.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
+		port.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
 		Scanner data = new Scanner(port.getInputStream());
+		PrintWriter print = new PrintWriter(port.getOutputStream());
 
-		int number = 0;
-		while(true) {
-			if(data.hasNextLine()) {
-				try{number = data.nextInt();} catch (Exception e) {};
-				slider.setValue(number);
-			}
-		}
-		
+//		while(true) {
+//			if(scan.hasNextLine()) {
+//		Thread.sleep(4000);
+		System.out.println("" + 0x02);
+				port.writeBytes(new byte[] {0x11}, 1);
+//			}
+//		}
 	}
 }

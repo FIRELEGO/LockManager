@@ -8,7 +8,6 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="E:/All_Programs/Program_folders/CommonFiles/Java/itextpdf-5.5.10.jar"/>
-	<classpathentry kind="lib" path="E:/All_Programs/Program_folders/CommonFiles/Java/jSerialComm-1.3.11.jar"/>
 	<classpathentry kind="lib" path="E:/All_Programs/Program_folders/CommonFiles/Java/mysql-connector-java-5.1.40-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
