@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class LookUpComboGUI extends GUI {
-	private Label lblCombo = new Label("Combo: ");
+	private Label lblCombo = new MyLabel("Combo: ");
 	private TextField txtCombo = new TextField();
 	private TableView<Lock> tvLocks = new TableView<Lock>();
 
@@ -72,7 +72,7 @@ public class LookUpComboGUI extends GUI {
 					Integer.parseInt(temp);
 				}
 				Main.log("Looked up all with the combo " + combo);
-				tvLocks.setItems(Main.searchCombo(combo, true)); // TODO allow conversion from old to new and reconfigure for observable list. (No reseting the items every time, just mod the list)
+				tvLocks.setItems(Main.searchCombo(combo, true));
 			}
 		} catch (NumberFormatException e) {
 			lblError.setText("Make sure the combo is in xx-xx-xx!");

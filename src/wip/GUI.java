@@ -2,6 +2,7 @@ package wip;
 
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -9,6 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
@@ -22,7 +26,7 @@ public abstract class GUI {
 	// Bottom grid pane that has all of the navigation buttons
 	protected GridPane gpButtons;
 	// program title and version change
-	private Label lblHeader = new Label("\nLock Manager\t\tV" + Main.VERSION);
+	private Label lblHeader = new MyLabelHeader("\nLock Manager\t\tV" + Main.VERSION);
 	// Green label used to notify the user of a success without requiring acknowledgment  
 	protected Label lblSuccess = new Label("");
 	// Red label used to notify the user of a failure without requiring acknowledgment  
@@ -51,6 +55,7 @@ public abstract class GUI {
 		gpRoot.setAlignment(Pos.TOP_CENTER);
 		gpRoot.setHgap(8);
 		gpRoot.setVgap(8);
+		gpRoot.setBackground(new Background(new BackgroundFill(Color.web("#0889de"), CornerRadii.EMPTY, Insets.EMPTY)));
 
 		gpInfo.setAlignment(Pos.TOP_CENTER);
 		gpInfo.setHgap(8);

@@ -28,32 +28,32 @@ public class GenerateGUI extends GUI {
 	private CheckBox cbFloor = new CheckBox("Floor");
 
 	private GridPane gpLockRestrictions = new GridPane();
-	private Label lblYearAdded = new Label("Year Added: ");
-	private Label lblYearAddedStart = new Label("Start: ");
+	private Label lblYearAdded = new MyLabel("Year Added: ");
+	private Label lblYearAddedStart = new MyLabel("Start: ");
 	private TextField txtYearAddedStart = new MyTextField(60);
-	private Label lblYearAddedEnd = new Label(" End: ");
+	private Label lblYearAddedEnd = new MyLabel(" End: ");
 	private TextField txtYearAddedEnd = new MyTextField(60); 
-	private Label lblYearLastUsed = new Label("Year Last Used: ");
-	private Label lblYearLastUsedStart = new Label("Start: ");
+	private Label lblYearLastUsed = new MyLabel("Year Last Used: ");
+	private Label lblYearLastUsedStart = new MyLabel("Start: ");
 	private TextField txtYearLastUsedStart = new MyTextField(60);
-	private Label lblYearLastUsedEnd = new Label(" End: ");
+	private Label lblYearLastUsedEnd = new MyLabel(" End: ");
 	private TextField txtYearLastUsedEnd = new MyTextField(60);
-	private Label lblTotalUses = new Label("Total Uses: ");
-	private Label lblTotalUsesStart = new Label("Start: ");
+	private Label lblTotalUses = new MyLabel("Total Uses: ");
+	private Label lblTotalUsesStart = new MyLabel("Start: ");
 	private TextField txtTotalUsesStart = new MyTextField(60);
-	private Label lblTotalUsesEnd = new Label(" End: ");
+	private Label lblTotalUsesEnd = new MyLabel(" End: ");
 	private TextField txtTotalUsesEnd = new MyTextField(60);
 
 	private GridPane gpLockerRestrictions = new GridPane();
-	private Label lblLockerNum = new Label("Locker Number: ");
-	private Label lblLockerNumStart = new Label("Start: ");
+	private Label lblLockerNum = new MyLabel("Locker Number: ");
+	private Label lblLockerNumStart = new MyLabel("Start: ");
 	private TextField txtLockerNumStart = new MyTextField(60);
-	private Label lblLockerNumEnd = new Label(" End: ");
+	private Label lblLockerNumEnd = new MyLabel(" End: ");
 	private TextField txtLockerNumEnd = new MyTextField(60);
-	private Label lblFLoor = new Label("Floor: ");
-	private Label lblFloorStart = new Label("Start: ");
+	private Label lblFLoor = new MyLabel("Floor: ");
+	private Label lblFloorStart = new MyLabel("Start: ");
 	private TextField txtFloorStart = new MyTextField(60);
-	private Label lblFloorEnd = new Label(" End: ");
+	private Label lblFloorEnd = new MyLabel(" End: ");
 	private TextField txtFloorEnd = new MyTextField(60);
 
 	private Button btnCheckRestrictions = new MyButton("Check Restriction");

@@ -12,18 +12,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class AssignBarcodeGUI extends GUI {
-	private Label lblSerial = new Label("Serial: ");
+	private Label lblSerial = new MyLabel("Serial: ");
 	private TextField txtSerial = new TextField("");
-	private Label lblBarcode = new Label("Barcode: ");
+	private Label lblBarcode = new MyLabel("Barcode: ");
 	private TextField txtBarcode = new TextField("");
-	private Label lblCombo = new Label("Combo: ");
-	private Label lblComboT = new Label("-");
-	private Label lblYearAdded = new Label("Year Added: ");
-	private Label lblYearAddedT = new Label("-");
-	private Label lblYearLastUsed = new Label("Year Last Used: ");
-	private Label lblYearLastUsedT = new Label("-");
-	private Label lblTotalUses = new Label("Total Uses: ");
-	private Label lblTotalUsesT = new Label("-");
+	private Label lblCombo = new MyLabel("Combo: ");
+	private Label lblComboT = new MyLabel("-");
+	private Label lblYearAdded = new MyLabel("Year Added: ");
+	private Label lblYearAddedT = new MyLabel("-");
+	private Label lblYearLastUsed = new MyLabel("Year Last Used: ");
+	private Label lblYearLastUsedT = new MyLabel("-");
+	private Label lblTotalUses = new MyLabel("Total Uses: ");
+	private Label lblTotalUsesT = new MyLabel("-");
 
 	private Button btnCheckForExisting = new MyButton("Check for Lock");
 	private Button btnAssign = new MyButton("Assign");

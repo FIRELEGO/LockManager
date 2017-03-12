@@ -10,16 +10,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class AssignLockerGUI extends GUI {
-	private Label lblBarcode = new Label("Barcode: ");
+	private Label lblBarcode = new MyLabel("Barcode: ");
 	private TextField txtBarcode = new TextField("");
-	private Label lblLockerNum = new Label("Locker Number: ");
+	private Label lblLockerNum = new MyLabel("Locker Number: ");
 	private TextField txtLockerNum = new TextField("");
-	private Label lblTotalUses = new Label("Total Uses: ");
-	private Label lblTotalUsesT = new Label("-");
-	private Label lblLastUsed = new Label("Last Used: ");
-	private Label lblLastUsedT = new Label("-");
-	private Label lblYearAdded = new Label("Year Added: ");
-	private Label lblYearAddedT = new Label("-");
+	private Label lblTotalUses = new MyLabel("Total Uses: ");
+	private Label lblTotalUsesT = new MyLabel("-");
+	private Label lblLastUsed = new MyLabel("Last Used: ");
+	private Label lblLastUsedT = new MyLabel("-");
+	private Label lblYearAdded = new MyLabel("Year Added: ");
+	private Label lblYearAddedT = new MyLabel("-");
 	private Button btnIncrement = new Button("+");
 
 	private Button btnAssign = new MyButton("Assign");

@@ -14,21 +14,21 @@ import javafx.scene.layout.GridPane;
 public class DeleteGUI extends GUI {
 	private Lock lock;
 
-	private Label lblSerial = new Label("Serial: ");
+	private Label lblSerial = new MyLabel("Serial: ");
 	private TextField txtSerial = new TextField("");
 	private Button btnCheckForExisting = new MyButton("Check for existing lock");
-	private Label lblBarcode = new Label("Barcode: ");
-	private Label lblBarcodeT = new Label("-");
-	private Label lblCombo = new Label("Combo: ");
-	private Label lblComboT = new Label("-");
-	private Label lblYearAdded = new Label("Year Added: ");
-	private Label lblYearAddedT = new Label("-");
-	private Label lblYearUsed = new Label("Year Last Used: ");
-	private Label lblYearUsedT = new Label("-");
-	private Label lblTotalUses = new Label("Total Uses: ");
-	private Label lblTotalUsesT = new Label("-");
-	private Label lblAssignedLocker = new Label("Assigned Locker: ");
-	private Label lblAssignedLockerT = new Label("-");
+	private Label lblBarcode = new MyLabel("Barcode: ");
+	private Label lblBarcodeT = new MyLabel("-");
+	private Label lblCombo = new MyLabel("Combo: ");
+	private Label lblComboT = new MyLabel("-");
+	private Label lblYearAdded = new MyLabel("Year Added: ");
+	private Label lblYearAddedT = new MyLabel("-");
+	private Label lblYearUsed = new MyLabel("Year Last Used: ");
+	private Label lblYearUsedT = new MyLabel("-");
+	private Label lblTotalUses = new MyLabel("Total Uses: ");
+	private Label lblTotalUsesT = new MyLabel("-");
+	private Label lblAssignedLocker = new MyLabel("Assigned Locker: ");
+	private Label lblAssignedLockerT = new MyLabel("-");
 
 	private Button btnDelete = new MyButton("Delete");
 	private Button btnClear = new MyButton("Clear");

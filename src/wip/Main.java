@@ -22,14 +22,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
 /* TODO features
- * check all confirmation message types. alert vs line
- * comment code
- * fix report system
- * fix data sheet generation (Check that user entered data into restrictions)
- * figure out locker floor system
- * assign locker problem
  * What user can do based on role
- * Add purpose of GUI comments to each GUI class
+ * Fix complaint review system
  */
 
 public class Main {
@@ -39,6 +33,8 @@ public class Main {
 	public static Account user;
 
 	public static final String VERSION = "0.9.0";
+//	public static final String LABEL_FONT = "Bauhaus 93";
+	public static final String LABEL_FONT = "Constantia";
 
 	private static DBConnectionManager db;
 
@@ -166,8 +162,6 @@ public class Main {
 
 	// Method called to exit the program
 	public static void exit() {
-		//		save(); TODO
-
 		// Don't log an exit if no one logged in
 		if(user != null) {
 			Main.log("Logged off.");
@@ -278,7 +272,7 @@ public class Main {
 		ArrayList<Report> data = db.getReports();
 
 		for(int i = 0; i < data.size(); i++) {
-					reports.add(data.get(0));
+					reports.add(data.get(i));
 		}
 
 		return reports;

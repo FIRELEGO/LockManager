@@ -21,7 +21,6 @@ public class HomeGUI extends GUI {
 	public HomeGUI() {
 		super(500, 400, "Home");
 		
-		// TODO not done functions
 		btnUnlockLock.setDisable(true);
 		
 		gpButtons.add(btnLookUp, 0, 0);

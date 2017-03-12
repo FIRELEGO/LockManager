@@ -18,7 +18,7 @@ import javafx.collections.ObservableList;
 public class DBConnectionManager {
 	// Sets address of DB based on location
 	private static final String DB_COMP_NAME = Main.homeDB ? "localhost" : "0151T3105C47541";
-	// TODO OLD_DB_COMP_NAME will be independent once fully released
+	// ,
 	private static final String OLD_DB_COMP_NAME = DB_COMP_NAME;
 
 	private static DBConnectionManager db = null;

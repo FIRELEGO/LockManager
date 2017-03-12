@@ -7,14 +7,14 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class ReportGUI extends GUI {
-	private Label lblSerial = new Label("Lock Serial");
+	private Label lblSerial = new MyLabel("Lock Serial");
 	private TextField txtSerial = new MyTextField(120);
-	private Label lblPriority = new Label("Priority");
+	private Label lblPriority = new MyLabel("Priority");
 	private ComboBox<String> cbPriority = new ComboBox<String>();
-	private Label lblComplaint = new Label("Complaint");
+	private Label lblComplaint = new MyLabel("Complaint");
 	private TextArea txtComplaint = new TextArea();
 
-	private Label lblLength = new Label("Characters: 0/500");
+	private Label lblLength = new MyLabel("Characters: 0/500");
 
 	private Button btnSubmit = new MyButton("Submit");
 	private Button btnClear = new MyButton("Clear");
@@ -79,7 +79,7 @@ public class ReportGUI extends GUI {
 					Main.log("Report filed.");
 					
 					clear();
-					lblSuccess.setText("Report filed.");
+					lblSuccess.setText("Report filed.");					
 				}
 			} catch(NumberFormatException e) {
 				lblError.setText("Check that serial is a number.");

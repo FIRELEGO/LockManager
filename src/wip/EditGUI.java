@@ -9,21 +9,21 @@ import javafx.scene.layout.GridPane;
 public class EditGUI extends GUI {
 	private Lock lock;
 
-	private Label lblSerial = new Label("Serial: ");
+	private Label lblSerial = new MyLabel("Serial: ");
 	private TextField txtSerial = new TextField("");
-	private Label lblBarcode = new Label("Barcode: ");
+	private Label lblBarcode = new MyLabel("Barcode: ");
 	private TextField txtBarcode = new TextField("");
 	private Button btnCheckForExisting = new MyButton("Check for Existing");
-	private Label lblCombo = new Label("Combo: ");
+	private Label lblCombo = new MyLabel("Combo: ");
 	private TextField txtCombo = new TextField("");
-	private Label lblYearAdded = new Label("Year Added: ");
+	private Label lblYearAdded = new MyLabel("Year Added: ");
 	private TextField txtYearAdded = new TextField("");
-	private Label lblYearUsed = new Label("Year Last Used: ");
+	private Label lblYearUsed = new MyLabel("Year Last Used: ");
 	private TextField txtYearUsed = new TextField("");
-	private Label lblTotalUses = new Label("Total Uses: ");
+	private Label lblTotalUses = new MyLabel("Total Uses: ");
 	private TextField txtTotalUses = new TextField("");
-	private Label lblAssignedLocker = new Label("Assigned Locker: ");
-	private Label lblAssignedLockerT = new Label("-");
+	private Label lblAssignedLocker = new MyLabel("Assigned Locker: ");
+	private Label lblAssignedLockerT = new MyLabel("-");
 
 	private Button btnChangeInfo = new MyButton("Change Info");
 	private Button btnClear = new MyButton("Clear");

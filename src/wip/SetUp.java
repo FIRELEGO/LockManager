@@ -21,7 +21,7 @@ public class SetUp extends Application {
 	public void start(Stage stage) throws Exception {
 		SetUp.stage = stage;
 		// Sets icon
-		stage.getIcons().add(new Image("file:res/lock.png"));
+		stage.getIcons().add(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("lock.png")));
 		
 		// Sets close action
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

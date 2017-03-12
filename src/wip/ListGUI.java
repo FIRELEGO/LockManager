@@ -12,7 +12,7 @@ public class ListGUI extends GUI {
 	private Button btnBack = new Button("Back");
 	
 	public ListGUI() {
-		super(600, 800, "All Info");
+		super(600, 600, "All Info");
 		
 		TableColumn<Lock, Integer> tcSerial = new TableColumn<Lock, Integer>("Serial");
 		TableColumn<Lock, String> tcCombo = new TableColumn<Lock, String>("Combo");

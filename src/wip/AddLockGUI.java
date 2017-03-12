@@ -9,14 +9,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class AddLockGUI extends GUI {
-	private Label lblSerial = new Label("Serial: ");
+	private Label lblSerial = new MyLabel("Serial: ");
 	private TextField txtSerial = new TextField("");
-	private Label lblCombo = new Label("Combo(xx-xx-xx): ");
+	private Label lblCombo = new MyLabel("Combo(xx-xx-xx): ");
 	private TextField txtCombo = new TextField("");
-	private Label lblBarcode = new Label("Barcode: ");
+	private Label lblBarcode = new MyLabel("Barcode: ");
 	private TextField txtBarcode = new TextField("");
-	private Label lblYearAdded = new Label("Year Added: ");
-	private Label lblYearAddedT = new Label("-");
+	private Label lblYearAdded = new MyLabel("Year Added: ");
+	private Label lblYearAddedT = new MyLabel("-");
 
 	private Button btnCheckForExisting = new MyButton("Check for Existing");
 	private Button btnAdd = new MyButton("Add");
@@ -54,7 +54,7 @@ public class AddLockGUI extends GUI {
 		btnAdd.setOnAction(e -> add());
 		btnClear.setOnAction(e -> clear());
 		btnBack.setOnAction(e -> Main.setStage("Home"));
-		
+
 		enterBtn = btnAdd;
 	}
 
@@ -87,8 +87,10 @@ public class AddLockGUI extends GUI {
 				// Splits combo from xx-xx-xx to array then makes sure they're all numbers
 				String[] comboNums = combo.split("-");
 				for(String temp : comboNums) {
-					// TODO check all nums are < 40
-					Integer.parseInt(temp);
+					int num = Integer.parseInt(temp);
+					if(num < 0 || num > 40) {
+							throw new Exception();
+					}
 				}
 
 				Main.log("Lock with serial " + serial + " added.");
@@ -105,6 +107,8 @@ public class AddLockGUI extends GUI {
 			}
 		} catch (NumberFormatException e) {
 			lblError.setText("Check that the serial and barcode are integers.");
+		} catch (Exception e) {
+			lblError.setText("Check that each number in the combo is 0 - 40.");
 		}
 	}
 
@@ -162,7 +166,7 @@ public class AddLockGUI extends GUI {
 		lblYearAddedT.setText("-");
 		btnAdd.setDisable(true);
 		btnCheckForExisting.setText("Check for Existing");
-		
+
 		txtSerial.requestFocus();
 	}
 

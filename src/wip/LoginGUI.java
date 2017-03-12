@@ -6,9 +6,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class LoginGUI extends GUI {
-	private Label lblUsername = new Label("Username: ");
+	private Label lblUsername = new MyLabel("Username: ");
 	private TextField txtUsername = new TextField("");
-	private Label lblPassword = new Label("Password: ");
+	private Label lblPassword = new MyLabel("Password: ");
 	private PasswordField txtPassword = new PasswordField();
 
 	private Button btnSignin = new MyButton("Sign in");
