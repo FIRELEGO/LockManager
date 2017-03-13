@@ -41,6 +41,7 @@ public class DBConnectionManager {
 	private PreparedStatement psCheckAssignment;
 	private PreparedStatement psAddLock;
 	private PreparedStatement psDeleteReportsBySerial;
+	private PreparedStatement psDeleteReport;
 	private PreparedStatement psChangeLock;
 	private PreparedStatement psSetLockUse;
 	private PreparedStatement psPurgeOldLocks;
@@ -117,6 +118,7 @@ public class DBConnectionManager {
 			psCheckAssignment = conn.prepareStatement("SELECT * FROM suncoast.lockerassignment WHERE LockerNum=? OR Serial=?;");
 			psDeleteLock = conn.prepareStatement("DELETE FROM suncoast.lock WHERE Serial=?;");
 			psDeleteReportsBySerial = conn.prepareStatement("DELETE FROM suncoast.reports WHERE LockSerial=?;");
+			psDeleteReport = conn.prepareStatement("DELETE FROM suncoast.reports WHERE ReportID=?;");
 			psAddLock = conn.prepareStatement("INSERT INTO suncoast.lock (Serial, Combo, Barcode, YearAdded, YearLastUsed, TotalUses) VALUES (?, ?, ?, ?, 3000, 0);");
 			psChangeLock = conn.prepareStatement("UPDATE suncoast.lock SET Serial=?, Combo=?, Barcode=?, YearAdded=?, YearLastUsed=?, TotalUses=? WHERE Serial=?;");
 			psSetLockUse = conn.prepareStatement("UPDATE suncoast.lock SET YearLastUsed=?, TotalUses=? WHERE Serial=?;");
@@ -256,7 +258,7 @@ public class DBConnectionManager {
 
 			ResultSet rs = psGetReportsForLock.executeQuery();
 			while(rs.next()) {
-				ret.add(new Report(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), ""));
+				ret.add(new Report(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), ""));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -467,7 +469,7 @@ public class DBConnectionManager {
 		try {
 			ResultSet rs = psGetReports.executeQuery();
 			while(rs.next()) {
-				ret.add(new Report(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)));
+				ret.add(new Report(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -522,6 +524,16 @@ public class DBConnectionManager {
 			psLog.setString(2, info);
 
 			psLog.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteReport(int reportId) {
+		try {
+			psDeleteReport.setInt(1, reportId);
+
+			psDeleteReport.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

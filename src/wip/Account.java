@@ -8,16 +8,16 @@ public class Account {
 	// Approval and privilege are set by accompanying app
 	private boolean awaitingAproval;
 	private boolean approved;
-	private int priviledge;
+	private int privilege;
 
-	public Account(String username, String password, String salt, boolean awaitingAproval, boolean approved, int priviledge) {
+	public Account(String username, String password, String salt, boolean awaitingAproval, boolean approved, int privilege) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.salt = salt;
 		this.awaitingAproval = awaitingAproval;
 		this.approved = approved;
-		this.priviledge = priviledge;
+		this.privilege = privilege;
 	}
 	
 	public String getUsername() {
@@ -40,7 +40,7 @@ public class Account {
 		return approved;
 	}
 
-	public int getPriviledge() {
-		return priviledge;
+	public int getPrivilege() {
+		return privilege;
 	}
 }

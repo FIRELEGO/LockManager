@@ -3,6 +3,7 @@ package wip;
 import javafx.scene.control.Button;
 
 public class HomeGUI extends GUI {
+	private int privilege = Main.user.getPrivilege();
 	private Button btnLookUp = new MyButton("Look Up");
 	private Button btnAddLock = new MyButton("Add Lock");
 	private Button btnEditLock = new MyButton("Edit Lock");
@@ -21,8 +22,6 @@ public class HomeGUI extends GUI {
 	public HomeGUI() {
 		super(500, 400, "Home");
 		
-		btnUnlockLock.setDisable(true);
-		
 		gpButtons.add(btnLookUp, 0, 0);
 		gpButtons.add(btnAddLock, 1, 0);
 		gpButtons.add(btnEditLock, 2, 0);
@@ -37,6 +36,14 @@ public class HomeGUI extends GUI {
 		gpButtons.add(btnList, 2, 3);
 		gpButtons.add(btnReleaseAllLocker, 1, 4);
 		gpButtons.add(btnExit, 1, 5);
+		
+		// 0 = user (maybe student), 1 = teacher, 2 = school admin, 3 = program admin/manager
+		if(privilege < 2) {
+			btnEditLock.setDisable(true);
+			btnDeleteLock.setDisable(true);
+			btnPurgeLocks.setDisable(true);
+			btnReleaseAllLocker.setDisable(true);
+		}
 
 		btnLookUp.setOnAction(e -> Main.setStage("LookUp"));
 		btnAddLock.setOnAction(e -> Main.setStage("AddLock"));

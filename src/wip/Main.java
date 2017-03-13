@@ -21,25 +21,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
-/* TODO features
- * What user can do based on role
- * Fix complaint review system
- */
-
 public class Main {
-	// TODO remove from final
 	public static boolean homeDB = true;
 	// Object of the user who is logged in
 	public static Account user;
 
-	public static final String VERSION = "0.9.0";
-//	public static final String LABEL_FONT = "Bauhaus 93";
+	public static final String VERSION = "1.0.0";
 	public static final String LABEL_FONT = "Constantia";
 
 	private static DBConnectionManager db;
 
 	public static void main(String[] args) {
-		// TODO remove from final
 		// Determines whether I am at home or school and sets DB URL accordingly
 		String hostname = "Unknown";
 		try	{
@@ -95,6 +87,9 @@ public class Main {
 				break;
 			case "DeleteLock":
 				SetUp.setScene(new DeleteGUI());
+				break;
+			case "UnlockLock":
+				SetUp.setScene(new UnlockGUI());
 				break;
 			default:
 				System.out.println("setStage() no case: " + key);
@@ -311,5 +306,10 @@ public class Main {
 	// Logs event into DB
 	public static void log(String info) {
 		db.log(user.getUsername(), info);
+	}
+
+	// Deletes report from DB
+	public static void deleteReport(int reportId) {
+		db.deleteReport(reportId);
 	}
 }
