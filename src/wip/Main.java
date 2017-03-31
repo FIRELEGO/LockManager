@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import arduinoControl.Arduino;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,6 +47,7 @@ public class Main {
 
 		db = DBConnectionManager.getInstance();
 
+		Arduino.start();
 		Application.launch(SetUp.class, args);
 	}
 
@@ -161,6 +163,7 @@ public class Main {
 		if(user != null) {
 			Main.log("Logged off.");
 		}
+		Arduino.close();
 		System.exit(0);
 	}
 

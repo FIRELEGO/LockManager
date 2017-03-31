@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
--- Host:                         0151T3105C47541
+-- Host:                         Nicks-PC
 -- Server version:               10.1.18-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
+-- Server OS:                    Win64
 -- HeidiSQL Version:             9.3.0.4984
 -- --------------------------------------------------------
 
@@ -11,11 +11,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping database structure for suncoast
+DROP DATABASE IF EXISTS `suncoast`;
 CREATE DATABASE IF NOT EXISTS `suncoast` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `suncoast`;
 
 
 -- Dumping structure for table suncoast.account
+DROP TABLE IF EXISTS `account`;
 CREATE TABLE IF NOT EXISTS `account` (
   `FirstName` varchar(50) NOT NULL,
   `LastName` varchar(50) NOT NULL,
@@ -37,10 +39,12 @@ CREATE TABLE IF NOT EXISTS `account` (
   UNIQUE KEY `UNIQUE` (`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table suncoast.account: ~4 rows (approximately)
+-- Dumping data for table suncoast.account: ~5 rows (approximately)
+DELETE FROM `account`;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 INSERT INTO `account` (`FirstName`, `LastName`, `Email`, `JobTitle`, `Username`, `Password`, `isAwaitingApproval`, `isApproved`, `Question1`, `Question2`, `Question3`, `Answer1`, `Answer2`, `Answer3`, `PrivilegeLevel`, `Salt`) VALUES
 	('cheyanne', 'manivong', 'chey@chey.com', 'Principal', 'chey', 'cheyanne', b'0', b'0', 'What was your childhood nickname?', 'What was your high school mascot?', 'What is your favorite web browser?', 'chey', 'charger', 'chrome', 3, ''),
+	('Nick', 'Signori', 'nic=yholas.signori@gmail.com', '0', 'low', '3cdadf1d4eb19c16b8fa41cdcec06518', b'0', b'1', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'LFP/R,-z5Myx;^_M0|~C'),
 	('Natascha', 'Kempfe', 'natkem@gmail.com', '0', 'nat', '3cdadf1d4eb19c16b8fa41cdcec06518', b'0', b'1', NULL, NULL, NULL, NULL, NULL, NULL, 3, 'LFP/R,-z5Myx;^_M0|~C'),
 	('Nick', 'Signori', 'nicholas.signori@gmail.com', '0', 'nick', '3cdadf1d4eb19c16b8fa41cdcec06518', b'0', b'1', NULL, NULL, NULL, NULL, NULL, NULL, 3, 'LFP/R,-z5Myx;^_M0|~C'),
 	('nat', 'kempfe', 'nlkempfe@gmail.com', 'Principal', 'nlkempfe', '2334NK98', b'0', b'1', 'What was your childhood nickname?', 'What is your favorite web browser?', 'In what town was your first job?', 'nat', 'chrome', 'pbg', 1, '');
@@ -48,6 +52,7 @@ INSERT INTO `account` (`FirstName`, `LastName`, `Email`, `JobTitle`, `Username`,
 
 
 -- Dumping structure for table suncoast.exam
+DROP TABLE IF EXISTS `exam`;
 CREATE TABLE IF NOT EXISTS `exam` (
   `examName` varchar(50) NOT NULL,
   `examType` varchar(50) NOT NULL,
@@ -60,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `exam` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table suncoast.exam: ~54 rows (approximately)
+DELETE FROM `exam`;
 /*!40000 ALTER TABLE `exam` DISABLE KEYS */;
 INSERT INTO `exam` (`examName`, `examType`, `month`, `day`, `year`, `time`, `fee`) VALUES
 	('AP Art History', 'REGULAR', 4, 2, 2017, '12:00 PM', 93),
@@ -120,16 +126,19 @@ INSERT INTO `exam` (`examName`, `examType`, `month`, `day`, `year`, `time`, `fee
 
 
 -- Dumping structure for table suncoast.form
+DROP TABLE IF EXISTS `form`;
 CREATE TABLE IF NOT EXISTS `form` (
   `name` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table suncoast.form: ~0 rows (approximately)
+DELETE FROM `form`;
 /*!40000 ALTER TABLE `form` DISABLE KEYS */;
 /*!40000 ALTER TABLE `form` ENABLE KEYS */;
 
 
 -- Dumping structure for table suncoast.lock
+DROP TABLE IF EXISTS `lock`;
 CREATE TABLE IF NOT EXISTS `lock` (
   `Serial` int(11) NOT NULL,
   `Combo` char(8) NOT NULL,
@@ -141,15 +150,18 @@ CREATE TABLE IF NOT EXISTS `lock` (
   UNIQUE KEY `Barcode` (`Barcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table suncoast.lock: ~2 rows (approximately)
+-- Dumping data for table suncoast.lock: ~3 rows (approximately)
+DELETE FROM `lock`;
 /*!40000 ALTER TABLE `lock` DISABLE KEYS */;
 INSERT INTO `lock` (`Serial`, `Combo`, `Barcode`, `YearAdded`, `YearLastUsed`, `TotalUses`) VALUES
+	(1, '1-11-12', 5, 2016, 2017, 63),
 	(2, '22-22-23', 3, 2016, 2017, 4),
 	(6, '12-45-32', 4, 2016, 2017, 1);
 /*!40000 ALTER TABLE `lock` ENABLE KEYS */;
 
 
 -- Dumping structure for table suncoast.lockerassignment
+DROP TABLE IF EXISTS `lockerassignment`;
 CREATE TABLE IF NOT EXISTS `lockerassignment` (
   `LockerNum` char(5) NOT NULL,
   `Serial` int(11) NOT NULL,
@@ -158,15 +170,17 @@ CREATE TABLE IF NOT EXISTS `lockerassignment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table suncoast.lockerassignment: ~3 rows (approximately)
+DELETE FROM `lockerassignment`;
 /*!40000 ALTER TABLE `lockerassignment` DISABLE KEYS */;
 INSERT INTO `lockerassignment` (`LockerNum`, `Serial`) VALUES
-	('25', 1),
-	('212', 2),
-	('55', 5);
+	('3-242', 1),
+	('2-457', 2),
+	('2-451', 5);
 /*!40000 ALTER TABLE `lockerassignment` ENABLE KEYS */;
 
 
 -- Dumping structure for table suncoast.log
+DROP TABLE IF EXISTS `log`;
 CREATE TABLE IF NOT EXISTS `log` (
   `Date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Username` varchar(50) NOT NULL,
@@ -175,7 +189,8 @@ CREATE TABLE IF NOT EXISTS `log` (
   CONSTRAINT `FK_log_account` FOREIGN KEY (`Username`) REFERENCES `account` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table suncoast.log: ~42 rows (approximately)
+-- Dumping data for table suncoast.log: ~138 rows (approximately)
+DELETE FROM `log`;
 /*!40000 ALTER TABLE `log` DISABLE KEYS */;
 INSERT INTO `log` (`Date`, `Username`, `Info`) VALUES
 	('2017-02-09 10:30:19', 'nlkempfe', 'sdfas'),
@@ -224,30 +239,125 @@ INSERT INTO `log` (`Date`, `Username`, `Info`) VALUES
 	('2017-03-03 09:41:39', 'nick', 'Logged off.'),
 	('2017-03-03 09:53:02', 'nick', 'Login'),
 	('2017-03-03 09:54:34', 'nick', 'Looked up all with the combo 45-45-45'),
-	('2017-03-03 09:54:39', 'nick', 'Logged off.');
+	('2017-03-03 09:54:39', 'nick', 'Logged off.'),
+	('2017-03-07 13:20:55', 'nick', 'Login'),
+	('2017-03-07 13:21:08', 'nick', 'Logged off.'),
+	('2017-03-12 18:38:54', 'nick', 'Login'),
+	('2017-03-12 18:43:42', 'nick', 'Login'),
+	('2017-03-12 18:43:47', 'nick', 'Logged off.'),
+	('2017-03-12 18:48:51', 'nick', 'Login'),
+	('2017-03-12 18:49:06', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 18:50:48', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 18:50:57', 'nick', 'Logged off.'),
+	('2017-03-12 18:52:59', 'nick', 'Login'),
+	('2017-03-12 18:53:01', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 18:53:13', 'nick', 'Logged off.'),
+	('2017-03-12 18:53:33', 'nick', 'Login'),
+	('2017-03-12 18:53:34', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 18:53:41', 'nick', 'Logged off.'),
+	('2017-03-12 18:53:46', 'nick', 'Logged off.'),
+	('2017-03-12 18:53:55', 'nick', 'Login'),
+	('2017-03-12 18:54:03', 'nick', 'Logged off.'),
+	('2017-03-12 18:56:52', 'nick', 'Login'),
+	('2017-03-12 18:57:01', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 18:57:48', 'nick', 'Logged off.'),
+	('2017-03-12 19:14:54', 'low', 'Login'),
+	('2017-03-12 19:15:19', 'low', 'Logged off.'),
+	('2017-03-12 19:19:51', 'low', 'Login'),
+	('2017-03-12 19:19:54', 'low', 'Lock reports viewed.'),
+	('2017-03-12 19:20:03', 'low', 'Logged off.'),
+	('2017-03-12 19:22:58', 'nick', 'Login'),
+	('2017-03-12 19:23:01', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:23:23', 'nick', 'Logged off.'),
+	('2017-03-12 19:26:42', 'nick', 'Login'),
+	('2017-03-12 19:26:44', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:26:47', 'nick', 'Logged off.'),
+	('2017-03-12 19:42:17', 'nick', 'Login'),
+	('2017-03-12 19:42:20', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:43:32', 'nick', 'Logged off.'),
+	('2017-03-12 19:43:42', 'nick', 'Login'),
+	('2017-03-12 19:43:44', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:44:21', 'nick', 'Logged off.'),
+	('2017-03-12 19:45:29', 'nick', 'Login'),
+	('2017-03-12 19:45:31', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:45:39', 'nick', 'Logged off.'),
+	('2017-03-12 19:51:57', 'nick', 'Login'),
+	('2017-03-12 19:52:00', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:52:06', 'nick', 'Complaint id: 1 resolved.'),
+	('2017-03-12 19:52:11', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:52:50', 'nick', 'Logged off.'),
+	('2017-03-12 19:56:11', 'nick', 'Login'),
+	('2017-03-12 19:56:14', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:56:18', 'nick', 'Complaint id: 2 resolved.'),
+	('2017-03-12 19:56:22', 'nick', 'Logged off.'),
+	('2017-03-12 19:57:07', 'nick', 'Login'),
+	('2017-03-12 19:57:09', 'nick', 'Lock reports viewed.'),
+	('2017-03-12 19:57:13', 'nick', 'Complaint id: 3 resolved.'),
+	('2017-03-12 19:57:19', 'nick', 'Complaint id: 3 resolved.'),
+	('2017-03-12 19:57:27', 'nick', 'Logged off.'),
+	('2017-03-12 20:04:56', 'nick', 'Login'),
+	('2017-03-12 20:05:29', 'nick', 'Logged off.'),
+	('2017-03-12 20:07:00', 'nick', 'Login'),
+	('2017-03-12 20:09:17', 'nick', 'Login'),
+	('2017-03-12 20:09:44', 'nick', 'Logged off.'),
+	('2017-03-12 20:13:13', 'nick', 'Logged off.'),
+	('2017-03-12 21:39:45', 'nick', 'Login'),
+	('2017-03-12 21:40:04', 'nick', 'Logged off.'),
+	('2017-03-12 21:40:59', 'nick', 'Login'),
+	('2017-03-12 21:41:18', 'nick', 'Logged off.'),
+	('2017-03-12 21:44:05', 'nick', 'Login'),
+	('2017-03-12 21:44:14', 'nick', 'Logged off.'),
+	('2017-03-12 21:45:32', 'nick', 'Login'),
+	('2017-03-12 21:46:12', 'nick', 'Logged off.'),
+	('2017-03-12 21:48:09', 'nick', 'Login'),
+	('2017-03-12 21:48:18', 'nick', 'Logged off.'),
+	('2017-03-12 21:53:03', 'nick', 'Login'),
+	('2017-03-12 21:54:06', 'nick', 'Logged off.'),
+	('2017-03-12 21:55:43', 'nick', 'Login'),
+	('2017-03-12 21:55:55', 'nick', 'Logged off.'),
+	('2017-03-12 22:08:16', 'nick', 'Login'),
+	('2017-03-12 22:08:20', 'nick', 'Logged off.'),
+	('2017-03-12 23:38:13', 'nick', 'Login'),
+	('2017-03-12 23:38:31', 'nick', 'Logged off.'),
+	('2017-03-12 23:40:03', 'nick', 'Login'),
+	('2017-03-12 23:40:13', 'nick', 'Logged off.'),
+	('2017-03-12 23:40:46', 'nick', 'Login'),
+	('2017-03-12 23:41:18', 'nick', 'Logged off.'),
+	('2017-03-12 23:43:25', 'nick', 'Login'),
+	('2017-03-12 23:43:36', 'nick', 'Logged off.'),
+	('2017-03-12 23:44:17', 'nick', 'Login'),
+	('2017-03-12 23:44:58', 'nick', 'Logged off.'),
+	('2017-03-12 23:45:05', 'nick', 'Login'),
+	('2017-03-12 23:47:19', 'nick', 'Logged off.'),
+	('2017-03-12 23:47:25', 'nick', 'Login'),
+	('2017-03-12 23:47:51', 'nick', 'Logged off.'),
+	('2017-03-12 23:51:46', 'nick', 'Login');
 /*!40000 ALTER TABLE `log` ENABLE KEYS */;
 
 
--- Dumping structure for table suncoast.obligation
-CREATE TABLE IF NOT EXISTS `obligation` (
+-- Dumping structure for table suncoast.parkingdecal
+DROP TABLE IF EXISTS `parkingdecal`;
+CREATE TABLE IF NOT EXISTS `parkingdecal` (
   `studentNumber` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `paid` binary(50) NOT NULL,
-  `amount` double NOT NULL,
-  PRIMARY KEY (`studentNumber`,`name`)
+  `decalNumber` char(3) NOT NULL,
+  KEY `FK_parkingdecal_student` (`studentNumber`),
+  CONSTRAINT `FK_parkingdecal_student` FOREIGN KEY (`studentNumber`) REFERENCES `student` (`studentNumber`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table suncoast.obligation: ~0 rows (approximately)
-/*!40000 ALTER TABLE `obligation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `obligation` ENABLE KEYS */;
+-- Dumping data for table suncoast.parkingdecal: ~0 rows (approximately)
+DELETE FROM `parkingdecal`;
+/*!40000 ALTER TABLE `parkingdecal` DISABLE KEYS */;
+INSERT INTO `parkingdecal` (`studentNumber`, `decalNumber`) VALUES
+	(25382334, '22');
+/*!40000 ALTER TABLE `parkingdecal` ENABLE KEYS */;
 
 
 -- Dumping structure for table suncoast.reports
+DROP TABLE IF EXISTS `reports`;
 CREATE TABLE IF NOT EXISTS `reports` (
   `ReportID` int(11) NOT NULL AUTO_INCREMENT,
   `LockSerial` int(11) NOT NULL,
   `Priority` char(6) NOT NULL,
-  `Progress` char(8) NOT NULL,
   `Date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Report` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`ReportID`),
@@ -255,16 +365,32 @@ CREATE TABLE IF NOT EXISTS `reports` (
   CONSTRAINT `FK_reports_lock` FOREIGN KEY (`LockSerial`) REFERENCES `lock` (`Serial`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
--- Dumping data for table suncoast.reports: ~3 rows (approximately)
+-- Dumping data for table suncoast.reports: ~0 rows (approximately)
+DELETE FROM `reports`;
 /*!40000 ALTER TABLE `reports` DISABLE KEYS */;
-INSERT INTO `reports` (`ReportID`, `LockSerial`, `Priority`, `Progress`, `Date`, `Report`) VALUES
-	(1, 1, 'High', 'SUBMITED', '2012-02-16 00:00:00', NULL),
-	(2, 6, 'High', 'SUBMITED', '2017-02-27 09:58:23', 'fdgsdgfdssg'),
-	(3, 6, 'High', 'SUBMITED', '2017-02-27 10:04:28', 'fdgfdgdsfgdsfgdfgdsfgdfdfgfddfsgfdgfdsfdsfdsfdfdfdsfdfgfgfdfd');
 /*!40000 ALTER TABLE `reports` ENABLE KEYS */;
 
 
+-- Dumping structure for table suncoast.reservedlockers
+DROP TABLE IF EXISTS `reservedlockers`;
+CREATE TABLE IF NOT EXISTS `reservedlockers` (
+  `lockerNum` char(5) NOT NULL,
+  KEY `FK_lockerreservations_lockerassignment` (`lockerNum`),
+  CONSTRAINT `FK_lockerreservations_lockerassignment` FOREIGN KEY (`lockerNum`) REFERENCES `lockerassignment` (`LockerNum`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Dumping data for table suncoast.reservedlockers: ~3 rows (approximately)
+DELETE FROM `reservedlockers`;
+/*!40000 ALTER TABLE `reservedlockers` DISABLE KEYS */;
+INSERT INTO `reservedlockers` (`lockerNum`) VALUES
+	('2-451'),
+	('2-451'),
+	('2-457');
+/*!40000 ALTER TABLE `reservedlockers` ENABLE KEYS */;
+
+
 -- Dumping structure for table suncoast.student
+DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
   `studentNumber` int(11) NOT NULL,
   `gradeLevel` tinyint(1) NOT NULL,
@@ -276,25 +402,25 @@ CREATE TABLE IF NOT EXISTS `student` (
   `state` varchar(50) NOT NULL,
   `zipcode` int(11) NOT NULL,
   `homePhone` varchar(50) NOT NULL,
-  `dob` varchar(50) NOT NULL,
-  `program` varchar(50) DEFAULT NULL,
-  `decalNumber` int(11) DEFAULT NULL,
-  `boughtLocker` bit(1) DEFAULT NULL,
-  `boughtParkingDecal` bit(1) DEFAULT NULL,
+  `dob` char(10) NOT NULL,
+  `boughtLocker` bit(1) NOT NULL DEFAULT b'0',
+  `boughtParkingDecal` bit(1) NOT NULL DEFAULT b'0',
   `englishTeacher` varchar(50) DEFAULT NULL,
   `englishPeriod` int(11) DEFAULT NULL,
   PRIMARY KEY (`studentNumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table suncoast.student: ~3 rows (approximately)
+-- Dumping data for table suncoast.student: ~2 rows (approximately)
+DELETE FROM `student`;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` (`studentNumber`, `gradeLevel`, `firstName`, `middleName`, `lastName`, `address`, `city`, `state`, `zipcode`, `homePhone`, `dob`, `program`, `decalNumber`, `boughtLocker`, `boughtParkingDecal`, `englishTeacher`, `englishPeriod`) VALUES
-	(25382334, 12, 'NATASCHA', 'LY ', 'KEMPFE', '14384 83RD LN N', 'LOXAHATCHEE', 'FL', 33470, '5617847559', '10/14/98', NULL, 0, b'0', b'0', NULL, 0),
-	(28349363, 12, 'Nicholas', 'James', 'Signori', '152 Harbourside Circle', 'Jupiter', 'FL', 33477, '5615755908', '12/17/98', 'CS', 0, b'0', b'0', 'Mosley', 3);
+INSERT INTO `student` (`studentNumber`, `gradeLevel`, `firstName`, `middleName`, `lastName`, `address`, `city`, `state`, `zipcode`, `homePhone`, `dob`, `boughtLocker`, `boughtParkingDecal`, `englishTeacher`, `englishPeriod`) VALUES
+	(25382334, 12, 'NATASCHA', 'LY ', 'KEMPFE', '14384 83RD LN N', 'LOXAHATCHEE', 'FL', 33470, '5617847559', '10/14/98', b'0', b'1', NULL, 0),
+	(28349363, 12, 'Nicholas', 'James', 'Signori', '152 Harbourside Circle', 'Jupiter', 'FL', 33477, '5615755908', '12/17/98', b'0', b'1', 'Mosley', 3);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 
 
 -- Dumping structure for table suncoast.studentexam
+DROP TABLE IF EXISTS `studentexam`;
 CREATE TABLE IF NOT EXISTS `studentexam` (
   `studentNumber` int(11) NOT NULL,
   `examName` varchar(50) NOT NULL,
@@ -306,27 +432,35 @@ CREATE TABLE IF NOT EXISTS `studentexam` (
   CONSTRAINT `studentNumber` FOREIGN KEY (`studentNumber`) REFERENCES `student` (`studentNumber`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table suncoast.studentexam: ~5 rows (approximately)
+-- Dumping data for table suncoast.studentexam: ~3 rows (approximately)
+DELETE FROM `studentexam`;
 /*!40000 ALTER TABLE `studentexam` DISABLE KEYS */;
 INSERT INTO `studentexam` (`studentNumber`, `examName`, `examType`, `feePaid`) VALUES
+	(25382334, 'AP Environmental Science ', 'REGULAR', b'1'),
 	(28349363, 'AP Environmental Science', 'REGULAR', b'1'),
 	(28349363, 'AP Macroeconomics', 'REGULAR', b'1');
 /*!40000 ALTER TABLE `studentexam` ENABLE KEYS */;
 
 
 -- Dumping structure for table suncoast.studentlocker
+DROP TABLE IF EXISTS `studentlocker`;
 CREATE TABLE IF NOT EXISTS `studentlocker` (
   `studentNumber` int(11) NOT NULL,
   `LockerNum` char(5) DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
+  `isArchived` bit(1) DEFAULT NULL,
   KEY `LockerNum` (`LockerNum`),
   KEY `FK_studentlocker_student` (`studentNumber`),
-  CONSTRAINT `LockerNum` FOREIGN KEY (`LockerNum`) REFERENCES `lockerassignment` (`LockerNum`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_studentlocker_student` FOREIGN KEY (`studentNumber`) REFERENCES `student` (`studentNumber`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `LockerNum` FOREIGN KEY (`LockerNum`) REFERENCES `lockerassignment` (`LockerNum`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table suncoast.studentlocker: ~0 rows (approximately)
+-- Dumping data for table suncoast.studentlocker: ~2 rows (approximately)
+DELETE FROM `studentlocker`;
 /*!40000 ALTER TABLE `studentlocker` DISABLE KEYS */;
-INSERT INTO `studentlocker` (`studentNumber`, `LockerNum`) VALUES
-	(25382334, '25');
+INSERT INTO `studentlocker` (`studentNumber`, `LockerNum`, `year`, `isArchived`) VALUES
+	(28349363, '2-457', 2016, b'0'),
+	(25382334, '3-242', 2016, b'0');
 /*!40000 ALTER TABLE `studentlocker` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

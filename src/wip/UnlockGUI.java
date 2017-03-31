@@ -132,13 +132,13 @@ public class UnlockGUI extends GUI {
 						combo = txtCombo.getText();
 
 
-						arduinoControl.Open.open(combo);
+						arduinoControl.Arduino.open(combo);
 					}
 				} catch (Exception e) {
 					lblError.setText("Check that barcode is in XX-XX-XX.");
 				}
 			} else {
-		arduinoControl.Open.open(combo);
+		arduinoControl.Arduino.open(combo);
 			}
 	}
 

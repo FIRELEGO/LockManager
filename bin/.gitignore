@@ -1,6 +1,8 @@
 /CreateDB.sql
+/CreateDBs.sql
 /CreateOldLockTable.sql
 /arduinoControl/
+/combobreaker/
 /lock.png
 /palette.pdf
 /wip/
