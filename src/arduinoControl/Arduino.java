@@ -2,6 +2,7 @@ package arduinoControl;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 import gnu.io.CommPortIdentifier;
@@ -54,9 +55,11 @@ public class Arduino {
 
 	public static void open(String combo) {
 		if(!noArd) {
-			combo.replaceAll("-", "");
+			combo = combo.replaceAll("-", "");
 
 			try {
+				System.out.println(combo);
+				System.out.println(Arrays.toString(combo.getBytes()));
 				outputStream.write(combo.getBytes());
 			} catch (Exception e) {
 				noArd = true;

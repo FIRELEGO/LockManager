@@ -260,8 +260,8 @@ public class Main {
 	}
 
 	// Adds a report to the DB
-	public static void addReport(int lockSerial, String priority, String progress, String report) {
-		db.addReport(lockSerial, priority, progress, report);
+	public static void addReport(int lockSerial, String priority, String report) {
+		db.addReport(lockSerial, priority, report);
 	}
 
 	// Gets reports from DB

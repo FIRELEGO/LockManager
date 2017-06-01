@@ -138,7 +138,6 @@ public class ViewReportsGUI extends GUI {
 					alert.showAndWait();
 
 					if(alert.getResult() == ButtonType.OK) {
-						tvReport.setItems(Main.getReports());
 						// User says ok
 						Main.log("Complaint id: " + rep.getReportId() + " resolved.");
 						Main.deleteReport(rep.getReportId());
@@ -148,7 +147,8 @@ public class ViewReportsGUI extends GUI {
 						alertDone.setHeaderText("The report has been resolved.");
 
 						alertDone.showAndWait();
-
+						
+						tvReport.setItems(Main.getReports());
 					}
 				}
 			});

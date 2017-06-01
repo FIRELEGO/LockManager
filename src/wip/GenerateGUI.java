@@ -7,12 +7,14 @@ import java.util.Date;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 
 public class GenerateGUI extends GUI {
@@ -290,6 +292,12 @@ public class GenerateGUI extends GUI {
 			Date date = new Date();
 			Main.log("Data sheet generated");
 			Pdf.createLockPDF(txtPath.getText(), dateFormat.format(date), res, data);
+			
+			Alert alertDone = new Alert(AlertType.INFORMATION);
+			alertDone.setTitle("Report Made");
+			alertDone.setHeaderText("The report can be found at " + txtPath.getText() + ".");
+
+			alertDone.showAndWait();
 		} else {
 			boolean[] reses = {false, false};
 			String res = "";

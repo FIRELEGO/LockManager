@@ -75,7 +75,7 @@ public class ReportGUI extends GUI {
 				} else if(txtComplaint.getText().equals("")) {
 					lblError.setText("Enter a complaint.");
 				} else {
-					Main.addReport(serial, cbPriority.getSelectionModel().getSelectedItem(), "SUBMITED", txtComplaint.getText());
+					Main.addReport(serial, cbPriority.getSelectionModel().getSelectedItem(), txtComplaint.getText());
 					Main.log("Report filed.");
 					
 					clear();

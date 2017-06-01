@@ -128,7 +128,7 @@ public class DBConnectionManager {
 			conn.prepareStatement("SELECT count(*) FROM suncoast.reports;");
 			psGetReports = conn.prepareStatement("SELECT * FROM suncoast.reports;");
 			psGetReportsForLock = conn.prepareStatement("SELECT * FROM suncoast.reports WHERE LockSerial = ?;");
-			psAddReport = conn.prepareStatement("INSERT INTO suncoast.reports (LockSerial, Priority, Progress, Report) VALUES (?, ?, ?, ?);");
+			psAddReport = conn.prepareStatement("INSERT INTO suncoast.reports (LockSerial, Priority, Report) VALUES (?, ?, ?);");
 			psGetUser = conn.prepareStatement("SELECT * FROM suncoast.account WHERE Username=?;");
 			psLog = conn.prepareStatement("INSERT INTO suncoast.log (Username, Info) VALUES (?, ?);");
 		} catch (SQLException e) {
@@ -450,12 +450,11 @@ public class DBConnectionManager {
 	}
 
 
-	public void addReport(int lockSerial, String priority, String progress, String report) {
+	public void addReport(int lockSerial, String priority, String report) {
 		try {
 			psAddReport.setInt(1, lockSerial);
 			psAddReport.setString(2, priority);
-			psAddReport.setString(3, progress);
-			psAddReport.setString(4, report);
+			psAddReport.setString(3, report);
 
 			psAddReport.execute();
 		} catch (SQLException e) {
